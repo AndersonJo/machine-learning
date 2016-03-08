@@ -1,2 +1,5 @@
-# IPython
-.ipynb_checkpoints
+# IDE
+.idea
+
+# Python
+*.pyc
