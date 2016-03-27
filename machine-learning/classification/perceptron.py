@@ -40,4 +40,3 @@ class Perceptron(object):
         Return class label after unit step
         """
         return np.where(self.net_input(X) >= 0.0, 1, -1)
-    
