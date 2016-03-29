@@ -3,3 +3,6 @@
 
 # Python
 *.pyc
+
+# Data
+*.csv
