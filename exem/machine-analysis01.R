@@ -1,9 +1,9 @@
-train.data.raw <- read.csv('machine-error02.csv', header = T)
-train.data.raw <- subset(train.data.raw, select = c(1, 3, 4, 5, 6, 7, 8))
+train.data.raw <- read.csv('machine-error01.csv', header = T)
+train.data.raw <- subset(train.data.raw, select = -c(2))
 
 data <- train.data.raw
-train <- data[1:14000,]
-test <- data[14001:14375,]
+train <- data[1:13000,]
+test <- data[13001:14375,]
 
 model = glm(formula=error~., family=binomial(link='logit'), data=train)
 
