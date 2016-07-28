@@ -1,5 +1,6 @@
 # IDE
 .idea
+_site
 
 # Python
 *.pyc
