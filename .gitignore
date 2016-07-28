@@ -7,3 +7,6 @@ _site
 
 # Data
 *.gz
+
+# R
+.Rhistory
