@@ -24,9 +24,22 @@ class RNNNumpy(object):
             o[t] = self.softmax(self.V.dot(s[t]))
         return [o, s]
 
+    def cross_entropy(self, x, y):
+        L = 0
+        for i in xrange(len(y)):
+            o, s = self.forward_propagation(x[i])
+
+            correct_word_predictions = o[np.arange(len(y[i])), y[i]]
+            L += -1 * np.sum(np.log(correct_word_predictions))
+        return L
+
+    def train(self, x, y):
+        N = np.sum((len(sentence) for sentence in y))
+        return self.cross_entropy(x, y)/N
+
     def softmax(self, v, t=1.0):
         e = np.exp(v / t)
-        return e/np.sum(e)
+        return e / np.sum(e)
 
     def predict(self, x):
         o, x = self.forward_propagation(x)
