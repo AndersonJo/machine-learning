@@ -5,10 +5,14 @@ class RNNNumpy(object):
     def __init__(self, word_dim, hidden_dim=100, bptt_truncate=4):
         self.word_dim = word_dim
         self.hidden_dim = hidden_dim
-        slef.bptt_truncate = bptt_truncate
+        self.bptt_truncate = bptt_truncate
+        
         self.U = np.random.uniform(-1. / np.sqrt(word_dim), 1. / np.sqrt(word_dim), (hidden_dim, word_dim))
         self.V = np.random.uniform(-1. / np.sqrt(word_dim), 1. / np.sqrt(word_dim), (word_dim, hidden_dim))
         self.W = np.random.uniform(-1. / np.sqrt(word_dim), 1. / np.sqrt(word_dim), (hidden_dim, word_dim))
+        print self.U.shape
+        print self.V.shape
+        print self.W.shape
 
     def forward_propagation(self, x):
         # The total number of time steps
