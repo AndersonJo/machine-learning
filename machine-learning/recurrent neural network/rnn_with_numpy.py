@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 import numpy as np
 
 
@@ -15,6 +16,10 @@ class RNNNumpy(object):
         print self.W.shape
 
     def forward_propagation(self, x):
+        """
+        :param x: 한문장이 되는.. 정수값을 갖는 vector
+        :return:
+        """
         # The total number of time steps
         T = len(x)
 
@@ -24,9 +29,12 @@ class RNNNumpy(object):
 
         # The outputs at each time step. Again, we save them for later.
         o = np.zeros((T, self.word_dim))
+
         for t in xrange(T):
             s[t] = self.U[:, x[t]]
             o[t] = self.softmax(self.V.dot(s[t]))
+
+
         return [o, s]
 
     def cross_entropy(self, x, y):
