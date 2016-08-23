@@ -7,7 +7,7 @@ class RNNNumpy(object):
         self.word_dim = word_dim
         self.hidden_dim = hidden_dim
         self.bptt_truncate = bptt_truncate
-        
+
         self.U = np.random.uniform(-1. / np.sqrt(word_dim), 1. / np.sqrt(word_dim), (hidden_dim, word_dim))
         self.V = np.random.uniform(-1. / np.sqrt(word_dim), 1. / np.sqrt(word_dim), (word_dim, hidden_dim))
         self.W = np.random.uniform(-1. / np.sqrt(word_dim), 1. / np.sqrt(word_dim), (hidden_dim, word_dim))
@@ -34,21 +34,20 @@ class RNNNumpy(object):
             s[t] = self.U[:, x[t]]
             o[t] = self.softmax(self.V.dot(s[t]))
 
-
         return [o, s]
 
     def cross_entropy(self, x, y):
+        N = np.sum((len(sentence) for sentence in y))
         L = 0
         for i in xrange(len(y)):
             o, s = self.forward_propagation(x[i])
-
-            correct_word_predictions = o[np.arange(len(y[i])), y[i]]
-            L += -1 * np.sum(np.log(correct_word_predictions))
-        return L
-
-    def train(self, x, y):
-        N = np.sum((len(sentence) for sentence in y))
-        return self.cross_entropy(x, y) / N
+            print o.shape
+            print s.shape
+            print 'y[i]', y[i]
+            predicted_output = o[np.arange(len(y[i])), y[i]]
+            print predicted_output
+            L += np.sum(np.log(predicted_output))
+        return -1 * L / N
 
     def bptt(self, x, y):
         T = len(y)
@@ -61,9 +60,9 @@ class RNNNumpy(object):
 
         for t in np.arange(T)[::-1]:
             dldV += np.outer(delta_o[t], s[t].T)
-
+            print 'dldV', dldV
             # Initial delta calculation
-            delta_t = self.V.T.dot(delta_o[t] * (1 - (s[t] ** 2)))
+            delta_t = self.V.T.dot(delta_o[t]) * (1 - (s[t] ** 2))
 
             # Backpropagration through time (for at most self.bptt_truncate steps)
             for bptt_step in np.arange(max(0, t - self.bptt_truncate), t + 1)[::-1]:
