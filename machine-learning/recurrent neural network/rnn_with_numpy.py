@@ -10,7 +10,7 @@ class RNNNumpy(object):
 
         self.U = np.random.uniform(-1. / np.sqrt(word_dim), 1. / np.sqrt(word_dim), (hidden_dim, word_dim))
         self.V = np.random.uniform(-1. / np.sqrt(word_dim), 1. / np.sqrt(word_dim), (word_dim, hidden_dim))
-        self.W = np.random.uniform(-1. / np.sqrt(word_dim), 1. / np.sqrt(word_dim), (hidden_dim, word_dim))
+        self.W = np.random.uniform(-1. / np.sqrt(word_dim), 1. / np.sqrt(word_dim), (hidden_dim, hidden_dim))
         print self.U.shape
         print self.V.shape
         print self.W.shape
@@ -31,25 +31,29 @@ class RNNNumpy(object):
         o = np.zeros((T, self.word_dim))
 
         for t in xrange(T):
-            s[t] = self.U[:, x[t]]
+
+            s[t] = np.tanh(self.U[:, x[t]] + self.W.dot(s[t - 1]))
             o[t] = self.softmax(self.V.dot(s[t]))
 
         return [o, s]
 
     def cross_entropy(self, x, y):
+        """
+        :param x: 문장들이 여러개 들어있는 matrix. 즉 training에 사용되는 전체 matrix
+        """
+
         N = np.sum((len(sentence) for sentence in y))
         L = 0
         for i in xrange(len(y)):
             o, s = self.forward_propagation(x[i])
-            print o.shape
-            print s.shape
-            print 'y[i]', y[i]
             predicted_output = o[np.arange(len(y[i])), y[i]]
-            print predicted_output
             L += np.sum(np.log(predicted_output))
         return -1 * L / N
 
     def bptt(self, x, y):
+        """
+        :param x: an array of a sentence
+        """
         T = len(y)
         o, s = self.forward_propagation(x)
         dldU = np.zeros(self.U.shape)
