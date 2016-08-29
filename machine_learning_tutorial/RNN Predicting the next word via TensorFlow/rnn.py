@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 import tensorflow as tf
 import numpy as np
 
@@ -12,14 +13,30 @@ class AndersonRNN(object):
         self.V = tf.Variable(self._random_init_weights([N, hidden]))
         self.W = tf.Variable(self._random_init_weights([hidden, hidden]))
 
+        self.S = tf.Variable()
+
+        self.i = tf.Variable(0)
+        self.i_n = tf.Variable(0)
+
     def _random_init_weights(self, dimension):
+        """
+        Initialize U, V, and W
+        """
         return tf.random_uniform(dimension, -1 / np.sqrt(self.N), 1. / np.sqrt(self.N))
 
     def forward_propagation(self, x):
         """
         :param x: an array of input data
         """
-        print self.U[:, 0]
+        T = len(x)
+        tf.assign(self.i, 0)
+        tf.assign(self.i_n, tf.size(x))
+
+        for t in xrange(T):
+            tf.tanh(self.U[:, x[t]])
+
+            print tf.size(x)
+            print
 
 
 def run():
@@ -30,7 +47,7 @@ def run():
     init_op = tf.initialize_all_variables()
     with tf.Session() as sess:
         sess.run(init_op)
-        rnn.forward_propagation(1)
+        rnn.forward_propagation([0, 122, 10, 30, 20])
 
         print np.array(sess.run([x])[0])
         print
