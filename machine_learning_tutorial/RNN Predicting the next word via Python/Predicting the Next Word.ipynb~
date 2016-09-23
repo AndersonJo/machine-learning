@@ -74,7 +74,11 @@
   },
   {
    "cell_type": "code",
+<<<<<<< HEAD
    "execution_count": 10,
+=======
+   "execution_count": 4,
+>>>>>>> 3024c7d236cf21e05680d2539a480cc7fbc7ea3a
    "metadata": {
     "collapsed": false
    },
@@ -90,8 +94,13 @@
     }
    ],
    "source": [
+<<<<<<< HEAD
     "t = datetime.now()\n",
     "with open('/home/anderson/Dropbox/reddit_comments_small.csv', 'rt') as f:\n",
+=======
+    "with open('/home/anderson/Dropbox/reddit_comments_small.csv', 'rt') as f:\n",
+    "    t = datetime.now()\n",
+>>>>>>> 3024c7d236cf21e05680d2539a480cc7fbc7ea3a
     "    reader = csv.reader(f, skipinitialspace=True)\n",
     "    \n",
     "    # Split full comments into sentences\n",
