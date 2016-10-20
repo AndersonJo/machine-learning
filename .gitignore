@@ -11,5 +11,9 @@ _site
 *.alz
 cifar-10-batches-py
 
+# TensorFlow Model
+*.model
+*.tfmodel
+
 # R
 .Rhistory
