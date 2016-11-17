@@ -2,8 +2,10 @@
 .idea
 _site
 
+
 # Python
 *.pyc
+.ipynb_checkpoints
 
 # Data
 *.gz
