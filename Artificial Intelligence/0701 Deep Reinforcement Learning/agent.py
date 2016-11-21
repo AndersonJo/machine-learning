@@ -5,7 +5,7 @@ import tflearn as tl
 
 
 class Agent(object):
-    def __init__(self, env, replay, replay_size=4, gpu_memory_fraction=0.4):
+    def __init__(self, env, replay, gpu_memory_fraction=0.4):
         self.env = env
         self.replay = replay
         self._build_training_network()
@@ -14,7 +14,7 @@ class Agent(object):
 
         # ETC Configurations
         self.pre_train_n = 100
-        self.train_frequency = self.replay.replay_size
+        self.train_frequency = self.replay.history_size
 
         # Epsilon
         self.step = 0
@@ -26,7 +26,7 @@ class Agent(object):
         # Training Network
         #######################
         self.dq_states = tf.placeholder('float32',
-                                        [None, self.replay.replay_size, self.env.height, self.env.width])
+                                        [None, self.replay.history_size, self.env.height, self.env.width])
 
         # Convolutional Neural Network
         net = tl.conv_2d(self.dq_states, 32, 8, strides=4, activation='relu')
@@ -43,7 +43,7 @@ class Agent(object):
         # Target Network
         #######################
         self.target = tf.placeholder('float32',
-                                     [None, self.replay.replay_size, self.env.height, self.env.width],
+                                     [None, self.replay.history_size, self.env.height, self.env.width],
                                      name='target')
 
         target_net = tl.conv_2d(self.target, 32, 8, strides=4, activation='relu')
@@ -63,7 +63,7 @@ class Agent(object):
         self.sess.run(init)
 
     def train(self, epoch=100):
-        state = self.env.reset()
+        screen = self.env.reset()
         buf_count = 0
         self.step = 0
 
@@ -72,38 +72,38 @@ class Agent(object):
             self.env.render()
 
             # Predict
-            action = self.predict(state)
+            action = self.predict(screen)
 
             # Action!
-            state, reward, done = self.env.step(action)
+            screen, reward, done, info = self.env.step(action)
 
             # Store the memory
-            self.replay.add(state, action, reward, done)
+            self.replay.add(screen, action, reward, done)
 
             # Observe
-            self.observe(state, reward, action, done)
+            self.observe(screen, reward, action, done)
 
             break
         self.env.close()
 
-    def observe(self, state, reward, action, done):
-        if self.step > self.pre_train_n:
-            if self.step % self.train_frequency == 0:
-                self.minibatch()
-
-    def predict(self, state, epsilon=None):
+    def predict(self, screen, epsilon=None):
         epsilon = epsilon if epsilon else self.epsilon
 
         if random.random() < epsilon:
             action = self.env.random_action()
         else:
             action = self.sess.run(self.dq_states,
-                                   feed_dict={self.dq_states: state})  # self.replay.sample(self.replay.sample())
+                                   feed_dict={self.dq_states: screen})  # self.replay.sample(self.replay.sample())
         return action
+
+    def observe(self, state, reward, action, done):
+        if self.step > self.pre_train_n:
+            if self.step % self.train_frequency == 0:
+                self.minibatch()
 
     def minibatch(self):
         if not self.replay.available:
-            self.
+            pass
 
     @property
     def epsilon(self):
