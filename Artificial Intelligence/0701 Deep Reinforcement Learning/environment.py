@@ -1,27 +1,40 @@
 import gym
+import cv2
 
 
 class Environment(object):
     def __init__(self, game):
-        self.env = gym.make(game)
+        self.game = gym.make(game)
+        self.action_size = self.game.action_space.n
+        self.height, self.width, _ = self.shape = self.game.observation_space.shape
 
-    def play(self):
-        env = self.env
-
-        for i in range(1000):
-            env.render()
-            action = env.action_space.sample()
-            observation, reward, done, info = env.step(action)
-            if reward:
-                print observation, reward, info
-
+    def play_sample(self):
+        while True:
+            self.game.render()
+            action = self.game.action_space.sample()
+            observation, reward, done = self.step(action)
             if done:
                 break
+        self.game.close()
 
+    def step(self, action, gray=True):
+        observation, reward, done, info = self.game.step(action)
+        if gray:
+            observation = cv2.cvtColor(observation, cv2.COLOR_RGB2GRAY)
+        return observation, reward, done
 
+    def random_step(self, gray=True):
+        action = self.game.action_space.sample()
+        return self.step(action, gray=True)
 
+    def random_action(self):
+        return self.game.action_space.sample()
 
+    def render(self):
+        return self.game.render()
 
-if __name__ == '__main__':
-    env = Environment('Breakout-v0')
-    env.play()
+    def reset(self):
+        return self.game.reset()
+
+    def close(self):
+        return self.game.close()
