@@ -16,6 +16,7 @@ cifar-10-batches-py
 # TensorFlow Model
 *.model
 *.tfmodel
+_network
 
 # R
 .Rhistory

@@ -1,28 +1,44 @@
+from glob import glob
+
 import numpy as np
 import os
 import random
+import logging
 
+import shutil
 import tensorflow as tf
 import tflearn as tl
+import re
 
 
 class Agent(object):
-    def __init__(self, env, replay, episode_n=100, gamma=0.95, gpu_memory_fraction=0.4):
+    def __init__(self, env, replay, episode_n=5000000, gamma=0.95, gpu_memory_fraction=0.4):
         self.env = env
         self.replay = replay
         self._build_dq_network()
         self._build_optimizer_network()
         self._init_tensorflow(gpu_memory_fraction)
-        self._build_summaries()
 
         # Train Configuration
         self.episode_n = episode_n
-        self.pre_train_n = 100
-        self.train_frequency = self.replay.history_size
+        self.pre_train_n = 1000
+        self.train_frequency = self.replay.action_repeat
         self.target_update_step = 100  # 10000
 
-        # Epsilon
+        # Initialization
         self.step = 0
+        self.loss = 0
+        self.losses = []
+
+        # Logger
+        FORMAT = '%(asctime)-15s %(clientip)s %(user)-8s %(message)s'
+        logging.basicConfig(format=FORMAT)
+        # console_handler = logging.StreamHandler()
+        self.logger = logging.getLogger('NeoDL')
+        self.logger.setLevel(logging.DEBUG)
+        # self.logger.addHandler(console_handler)
+
+        # Epsilon
         self._epsilon_range = (1., 0.1)
         self._epsilon_end = 5000000
 
@@ -55,7 +71,7 @@ class Agent(object):
                                        for i in range(len(self.network_variables))]
 
     def _build_dqn(self, name):
-        input = tf.placeholder('float32', [None, self.replay.history_size, self.env.height, self.env.width],
+        input = tf.placeholder('float32', [None, self.replay.action_repeat, self.env.height, self.env.width],
                                name=name + '_input')
 
         net1 = tl.conv_2d(input, 32, 8, strides=4, activation='relu', name=name + '_cnn1')
@@ -80,7 +96,7 @@ class Agent(object):
         a = tf.placeholder("int64", [None], name='optimizer_a')  # self.dqn_input
 
         one_hot = tf.one_hot(a, self.env.action_size, 1.0, 0.0)
-        action_q_values = tf.reduce_sum(self.dqn_output * one_hot, reduction_indices=1)
+        action_q_values = tf.reduce_sum(tf.mul(self.dqn_output, one_hot), reduction_indices=1)
         cost = tl.mean_square(action_q_values, y)
         optimizer = tf.train.RMSPropOptimizer(learning_rate=0.05, momentum=0.95, epsilon=0.01)
         grad_update = optimizer.minimize(cost, var_list=self.network_variables)
@@ -95,24 +111,8 @@ class Agent(object):
             'grad_update': grad_update
         }
 
-        # self.optimizer_target_input = tf.placeholder('float32', [None],
-        #                                              name='optimizer_target_input')  # <- self.target_output
-        # self.optimizer_dqn_input = tf.placeholder('int64', [None], name='optimizer_dqn_input')  # <- self.dqn_actions
-        #
-        # one_hot = tf.one_hot(self.optimizer_dqn_input, self.env.action_size, 1.0, 0.0)
-        # q_acted = tf.reduce_sum(self.dqn_output * one_hot, reduction_indices=1)
-        #
-        # self.delta = self.optimizer_target_input - q_acted
-        # self.loss = tf.reduce_mean(tf.square(self.delta))
-        #
-        # self.optim = tf.train.RMSPropOptimizer(learning_rate=0.01, momentum=0.95, epsilon=0.01).minimize(self.loss)
-
-        # rmsprop = tl.optimizers.RMSProp(learning_rate=0.1, decay=0.9, epsilon=0.05)
-        # self.regression = tl.regression(self.loss, optimizer=rmsprop)
-
     def _build_summaries(self):
-
-        tags = ['global_step', 'net_score']
+        tags = ['global_step', 'epsilon', 'net_score', 'loss']
 
         self.summary_placeholders = {}
         self.summary_ops = {}
@@ -120,9 +120,11 @@ class Agent(object):
             self.summary_placeholders[tag] = tf.placeholder('float32', None, name=tag)
             self.summary_ops[tag] = tf.scalar_summary(tag, self.summary_placeholders[tag])
 
+        if os.path.exists('/tmp/anderson_qlearning.tensorboard'):
+            shutil.rmtree('/tmp/anderson_qlearning.tensorboard')
         self.writer = tf.train.SummaryWriter('/tmp/anderson_qlearning.tensorboard', self.sess.graph)
 
-    def inject_summary(self, tag_dict, step):
+    def summary(self, tag_dict, step):
         summary_str_lists = self.sess.run([self.summary_ops[tag] for tag in tag_dict.keys()], {
             self.summary_placeholders[tag]: value for tag, value in tag_dict.items()
             })
@@ -136,20 +138,20 @@ class Agent(object):
         self.sess.run(init)
 
     def train(self):
-
+        self._build_summaries()
         self.step = 0
         for global_step in xrange(self.episode_n):
-            screen = self.env.reset()
-
+            self.env.get_initial_states()
+            self.losses = list()
             net_score = 0
 
             while True:
                 self.step += 1
-                self.env.render()
+                # self.env.render()
 
                 # Predict
                 if self.replay.available:
-                    screens = self.replay.retrieve()  # Recent 4 screens
+                    screens = self.env.recent_screens()
                     action = self.predict([screens])
                 else:
                     action = self.env.random_action()
@@ -158,13 +160,14 @@ class Agent(object):
                 screen, reward, done, info = self.env.step(action)
 
                 # Store the memory
+                self.env.add_screeen(screen)
                 self.replay.add(screen, action, reward, done)
 
                 # Observe
                 self.observe(screen, reward, action, done)
 
-                if self.step % self.save_step == 0:
-                    self.saver.save(self.sess, "/tmp/qlearning.ckpt", global_step=global_step)
+                # Store networks
+                self.persist(global_step)
 
                 # Logging
                 net_score += reward
@@ -172,22 +175,67 @@ class Agent(object):
                 if done:
                     break
 
-                self.inject_summary({'global_step': global_step,
-                                     'net_score': net_score}, global_step)
+            self.summary({'global_step': global_step,
+                          'epsilon': self.epsilon,
+                          'net_score': net_score,
+                          'loss': np.mean(self.losses)}, self.step)
 
         self.env.close()
 
-    def restore(self):
-        if os.path.exists('/tmp/qlearning.ckpt'):
-            self.saver.restore(self.sess, '/tmp/qlearning.ckpt')
+    def evaluate(self):
+        self.restore()
 
-    def predict(self, screen, epsilon=None):
-        epsilon = epsilon if epsilon else self.epsilon
+        for _ in range(100):
+            self.env.get_initial_states()
+
+            net_reward = 0
+            while True:
+                self.env.render()
+                screens = self.env.recent_screens()
+                action = self.predict([screens], epsilon=0)
+                screen, reward, done, info = self.env.step(action)
+
+                net_reward += reward
+                if done:
+                    break
+
+                # Store the memory
+                self.env.add_screeen(screen)
+
+            self.logger.info('Net Reward: %d' % net_reward)
+            self.env.close()
+
+    def persist(self, global_step):
+        if self.step % self.save_step == 0:
+            if not os.path.exists('_network'):
+                os.mkdir('_network')
+
+            [os.remove(os.path.join('_network', f)) for f in os.listdir('_network')]
+
+            self.saver.save(self.sess, "_network/neo-dl.ckpt", global_step=global_step)
+            self.logger.info('_network/neo-dl.ckpt has been persisted')
+
+    def restore(self):
+
+        filelist = glob('_network/neo-dl.ckpt*')
+        saved_files = list()
+        for f in filelist:
+            match = re.search(r'neo-dl\.ckpt-(?P<number>\d+)$', f)
+            if match:
+                saved_files.append((int(match.group('number')), f))
+
+        saved_files = sorted(saved_files, key=lambda x: -int(x[0]))
+        if len(saved_files) >= 1:
+            self.saver.restore(self.sess, saved_files[0][1])
+            self.logger.info('%s has been restored', filelist[0])
+
+    def predict(self, screens, epsilon=None):
+        epsilon = epsilon if epsilon is not None else self.epsilon
 
         if random.random() < epsilon:
             action = self.env.random_action()
         else:
-            action = np.argmax(self.sess.run(self.dqn_output, feed_dict={self.dqn_input: screen}), axis=1)
+            action = np.argmax(self.sess.run(self.dqn_output, feed_dict={self.dqn_input: screens}), axis=1)
         return action
 
     def observe(self, state, reward, action, done):
@@ -199,34 +247,30 @@ class Agent(object):
                 self.update_target_network()
 
     def update_target_network(self):
-
         self.sess.run(self._update_target_network)
+        self.logger.info('target network has been updated!')
 
     def minibatch(self):
         if not self.replay.available:
             return
 
         prestates, actions, rewards, poststates, terminals = self.replay.sample()
+        clipped_rewards = np.clip(rewards, -1, 1)
 
         # Calculate Target Network
-        target_predicted_actions = self.sess.run(self.target_output, feed_dict={self.target_input: poststates})
-        target_output = (1 - terminals) * rewards + self.gamma * np.max(target_predicted_actions, axis=1)
+        target_actions = self.sess.run(self.target_output, feed_dict={self.target_input: poststates})
+        target_output = (1 - terminals) * clipped_rewards + self.gamma * np.max(target_actions, axis=1)
 
         # Calculate Deep Q Network
         predicted_actions = np.argmax(self.sess.run(self.dqn_output, feed_dict={self.dqn_input: prestates}), axis=1)
 
-        # Optimization
-        # loss, dqn, opt_v = self.sess.run([self.loss, self.dqn_output, self.optim],
-        #                                  feed_dict={self.optimizer_target_input: target_output,
-        #                                             self.optimizer_dqn_input: predicted_actions,
-        #                                             self.dqn_input: prestates})
-        # print loss, dqn
-
         cost = self.optimizer['cost']
-        grad_upgrade = self.optimizer['grad_update']
-        loss_value, _ = self.sess.run([cost, grad_upgrade], feed_dict={self.dqn_input: prestates,
-                                                                       self.optimizer['a']: predicted_actions,
-                                                                       self.optimizer['y']: target_output})
+        grad_update = self.optimizer['grad_update']
+        loss, _ = self.sess.run([cost, grad_update], feed_dict={self.dqn_input: prestates,
+                                                                self.optimizer['a']: predicted_actions,
+                                                                self.optimizer['y']: target_output})
+        self.losses.append(loss)
+        # self.logger.info('Optimizer ran stochastic gradient descent')
 
     @property
     def epsilon(self):
