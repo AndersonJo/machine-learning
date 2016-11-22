@@ -12,7 +12,7 @@ import re
 
 
 class Agent(object):
-    def __init__(self, env, replay, episode_n=5000000, gamma=0.95, gpu_memory_fraction=0.4):
+    def __init__(self, env, replay, episode_n=50000000, gamma=0.95, gpu_memory_fraction=0.4):
         self.env = env
         self.replay = replay
         self._build_dq_network()
@@ -236,6 +236,7 @@ class Agent(object):
             action = self.env.random_action()
         else:
             action = np.argmax(self.sess.run(self.dqn_output, feed_dict={self.dqn_input: screens}), axis=1)
+
         return action
 
     def observe(self, state, reward, action, done):
