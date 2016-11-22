@@ -13,6 +13,7 @@ class Agent(object):
         self._build_dq_network()
         self._build_optimizer_network()
         self._init_tensorflow(gpu_memory_fraction)
+        self._build_summaries()
 
         # Train Configuration
         self.episode_n = episode_n
@@ -110,18 +111,23 @@ class Agent(object):
         # self.regression = tl.regression(self.loss, optimizer=rmsprop)
 
     def _build_summaries(self):
-        epsilon = tf.Variable(0.)
-        tf.scalar_summary('Epsilon', epsilon)
 
-        summaries = [epsilon]
-        placeholders = [tf.placeholder("float") for _ in range(len(summaries))]
-        summary_op = tf.merge_all_summaries()
+        tags = ['global_step', 'net_score']
 
-        return {
-            'summaries': summaries,
-            'placeholders': placeholders,
-            'summary_op': summary_op
-        }
+        self.summary_placeholders = {}
+        self.summary_ops = {}
+        for tag in tags:
+            self.summary_placeholders[tag] = tf.placeholder('float32', None, name=tag)
+            self.summary_ops[tag] = tf.scalar_summary(tag, self.summary_placeholders[tag])
+
+        self.writer = tf.train.SummaryWriter('/tmp/anderson_qlearning.tensorboard', self.sess.graph)
+
+    def inject_summary(self, tag_dict, step):
+        summary_str_lists = self.sess.run([self.summary_ops[tag] for tag in tag_dict.keys()], {
+            self.summary_placeholders[tag]: value for tag, value in tag_dict.items()
+            })
+        for summary_str in summary_str_lists:
+            self.writer.add_summary(summary_str, step)
 
     def _init_tensorflow(self, gpu_memory_faction=0.4):
         init = tf.initialize_all_variables()
@@ -131,11 +137,11 @@ class Agent(object):
 
     def train(self):
 
-        buf_count = 0
         self.step = 0
-
         for global_step in xrange(self.episode_n):
             screen = self.env.reset()
+
+            net_score = 0
 
             while True:
                 self.step += 1
@@ -160,8 +166,14 @@ class Agent(object):
                 if self.step % self.save_step == 0:
                     self.saver.save(self.sess, "/tmp/qlearning.ckpt", global_step=global_step)
 
+                # Logging
+                net_score += reward
+
                 if done:
                     break
+
+                self.inject_summary({'global_step': global_step,
+                                     'net_score': net_score}, global_step)
 
         self.env.close()
 
