@@ -9,7 +9,7 @@ import random
 class ExperienceReplay(object):
     def __init__(self, env, history_size=4, batch_size=32, memory_size=1000000):
         dims = list(env.dims)
-        print 'replay dims:', dims
+
         self.history_size = history_size
         self.batch_size = batch_size
         self.memory_size = memory_size
@@ -46,9 +46,9 @@ class ExperienceReplay(object):
                 if self.terminals[(index - self.history_size):index].any():
                     continue
                 break
-            print 'len(indexes)', self.prestates.shape, self.retreive(index).shape
-            self.prestates[len(indexes), ...] = self.retreive(index - 1)
-            self.poststates[len(indexes), ...] = self.retreive(index)
+
+            self.prestates[len(indexes), ...] = self.retrieve(index - 1)
+            self.poststates[len(indexes), ...] = self.retrieve(index)
             indexes.append(index)
 
         actions = self.actions[indexes]
@@ -57,10 +57,12 @@ class ExperienceReplay(object):
 
         return self.prestates, actions, rewards, self.poststates, terminals
 
-    def retreive(self, index):
+    def retrieve(self, index=None):
         """
         Retrieve 4 screens (4 is history_size)
         """
+        if index is None:
+            index = min(self.count, self.memory_size)
 
         index = index % self.count
         if index >= self.history_size - 1:
@@ -68,6 +70,10 @@ class ExperienceReplay(object):
         else:
             indexes = [(index - i) % self.count for i in reversed(range(self.history_size))]
             return self.screens[indexes, ...]
+
+    @property
+    def available(self):
+        return self.count >= self.history_size
 
 
 if __name__ == '__main__':
