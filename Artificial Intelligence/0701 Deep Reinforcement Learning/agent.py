@@ -100,10 +100,10 @@ class Agent(object):
 
         dqn_mt = tf.mul(self.dqn_output, a)
         action_q_values = tf.reduce_sum(dqn_mt, reduction_indices=1)
-        delta = y - action_q_values
-        # delta = tl.mean_square(y, action_q_values)
-        clipped_delta = tf.clip_by_value(delta, -1, 1)
-        cost = tf.reduce_mean(tf.square(clipped_delta))
+        # delta = y - action_q_values
+        cost = tl.mean_square(action_q_values, y)
+        # clipped_delta = tf.clip_by_value(delta, -1, 1)
+        # cost = tf.reduce_mean(tf.square(clipped_delta))
         optimizer = tf.train.RMSPropOptimizer(learning_rate=0.1, momentum=0.95, epsilon=0.01)
         grad_update = optimizer.minimize(cost, var_list=self.network_variables)
 
@@ -112,8 +112,9 @@ class Agent(object):
         self.optimizer = {
             'a': a,
             'y': y,
-            'dqn_mt': dqn_mt,
             'action_q_values': action_q_values,
+            # 'delta': delta,
+            # 'clipped_delta': clipped_delta,
             'cost': cost,
             'optimizer': optimizer,
             'grad_update': grad_update
@@ -300,21 +301,31 @@ class Agent(object):
 
         # Calculate Deep Q Network (Predict)
         # predicted_actions = self.sess.run(self.dqn_output, feed_dict={self.dqn_input: prestates})
-        #
+        # action_indices = np.argmax(predicted_actions, axis=1)
+        # actions = np.zeros(predicted_actions.shape)
+        # actions[range(len(actions)), action_indices] = 1
 
         actions = np.zeros((len(stored_actions), self.env.action_size))
         for i, action in enumerate(stored_actions):
             actions[i, action] = 1
 
+
         # Optimize
+        # 'dqn_mt': dqn_mt,
+        # 'action_q_values': action_q_values,
+        # 'delta': delta,
+        # 'clipped_delta': clipped_delta,
+        # 'cost': cost,
         cost = self.optimizer['cost']
         grad_update = self.optimizer['grad_update']
+
         img_dqn = self.image_summaries['dqn']
 
         dqn_summary, loss, _ = self.sess.run([img_dqn, cost, grad_update],
                                              feed_dict={self.dqn_input: prestates,
                                                         self.optimizer['a']: actions,
                                                         self.optimizer['y']: target_output})
+
 
         self.writer.add_summary(dqn_summary)
         self.writer.add_summary(target_summary)
