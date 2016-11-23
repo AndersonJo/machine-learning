@@ -32,7 +32,8 @@ class Environment(object):
         return screen, reward, done, info
 
     def preprocess(self, screen):
-        return cv2.resize(cv2.cvtColor(screen, cv2.COLOR_RGB2GRAY), (self.height, self.width))
+        preprocessed = cv2.resize(cv2.cvtColor(screen, cv2.COLOR_RGB2GRAY) / 255., (self.height, self.width))
+        return preprocessed
 
     def get_initial_states(self):
         screen = self.game.reset()

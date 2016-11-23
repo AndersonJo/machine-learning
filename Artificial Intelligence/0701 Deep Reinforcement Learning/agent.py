@@ -14,7 +14,7 @@ import re
 
 
 class Agent(object):
-    def __init__(self, env, replay, episode_n=50000000, gamma=0.95, gpu_memory_fraction=0.4):
+    def __init__(self, env, replay, episode_n=50000000, gamma=0.95, gpu_memory_fraction=0.5):
         self.env = env
         self.replay = replay
         self._build_dq_network()
@@ -23,9 +23,9 @@ class Agent(object):
 
         # Train Configuration
         self.episode_n = episode_n
-        self.pre_train_n = 1000
+        self.pre_train_n = 5000
         self.train_frequency = self.replay.action_repeat
-        self.target_update_step = 10000  # 10000
+        self.target_update_step = 10000
 
         # Initialization
         self.step = 0
@@ -48,10 +48,7 @@ class Agent(object):
         self.gamma = gamma  # used for discounted value
 
         # Persist
-        self.persist_step = 10  # Global Step
-
-        # Saver
-        self.save_step = 2000
+        self.persist_step = 50  # Global Step
         self.saver = tf.train.Saver(max_to_keep=5)
 
     def _build_dq_network(self):
@@ -76,23 +73,23 @@ class Agent(object):
                                        for i in range(len(self.network_variables))]
 
     def _build_dqn(self, name):
-        input = tf.placeholder('float32', [None, self.replay.action_repeat, self.env.height, self.env.width],
+        input = tf.placeholder('float', [None, self.replay.action_repeat, self.env.height, self.env.width],
                                name=name + '_input')
 
         transposed = tf.transpose(input, [0, 2, 3, 1])
         net1 = tl.conv_2d(transposed, 32, 8, strides=4, activation='relu', name=name + '_cnn1')
         net2 = tl.conv_2d(net1, 64, 4, strides=2, activation='relu', name=name + '_cnn2')
-        net3 = tl.conv_2d(net2, 64, 3, strides=1, activation='relu', name=name + '_cnn3')
+        # net3 = tl.conv_2d(net2, 64, 3, strides=1, activation='relu', name=name + '_cnn3')
 
-        net4 = tl.fully_connected(net3, 512, activation='relu', name=name + '_net1')
-        output = tl.fully_connected(net4, self.env.action_size, name=name + '_output')
+        net3 = tl.fully_connected(net2, 256, activation='relu', name=name + '_net1')
+        output = tl.fully_connected(net3, self.env.action_size, name=name + '_output')
         return {
             'input': input,
             'transposed': transposed,
             'net1': net1,
             'net2': net2,
             'net3': net3,
-            'net4': net4,
+            # 'net4': net4,
             'output': output
         }
 
@@ -103,8 +100,11 @@ class Agent(object):
 
         dqn_mt = tf.mul(self.dqn_output, a)
         action_q_values = tf.reduce_sum(dqn_mt, reduction_indices=1)
-        cost = tl.mean_square(action_q_values, y)
-        optimizer = tf.train.RMSPropOptimizer(learning_rate=0.05)
+        delta = y - action_q_values
+        # delta = tl.mean_square(y, action_q_values)
+        clipped_delta = tf.clip_by_value(delta, -1, 1)
+        cost = tf.reduce_mean(tf.square(clipped_delta))
+        optimizer = tf.train.RMSPropOptimizer(learning_rate=0.1, momentum=0.95, epsilon=0.01)
         grad_update = optimizer.minimize(cost, var_list=self.network_variables)
 
         # regression = regression(net, optimizer=rmsprop)
@@ -120,7 +120,7 @@ class Agent(object):
         }
 
     def _build_summaries(self):
-        tags = ['global_step', 'epsilon', 'net_score', 'loss',
+        tags = ['global_step', 'epsilon', 'net_score', 'loss', 'replay_memory_size',
                 'dqn_net2', 'dqn_net3', 'dqn_net4',
                 'target_net2', 'target_net3', 'target_net4']
 
@@ -181,7 +181,7 @@ class Agent(object):
                 screen, reward, done, info = self.env.step(action)
 
                 # Store the memory
-                self.replay.add(screen, action, reward, done)
+                self.replay.add(screen, reward, action, done)
 
                 # Observe
                 self.observe(screen, reward, action, done)
@@ -193,31 +193,30 @@ class Agent(object):
                     break
 
             dqn_net2 = np.mean(self.sess.run(self.dqn['net2'].W))
-            dqn_net3 = np.mean(self.sess.run(self.dqn['net3'].W))
-            dqn_net4 = np.mean(self.sess.run(self.dqn['net4'].W))
+            # dqn_net3 = np.sum(self.sess.run(self.dqn['net3'].W))
 
             target_net2 = np.mean(self.sess.run(self.target['net2'].W))
-            target_net3 = np.mean(self.sess.run(self.target['net3'].W))
-            target_net4 = np.mean(self.sess.run(self.target['net4'].W))
+            # target_net3 = np.mean(self.sess.run(self.target['net3'].W))
+
             self.summary({'global_step': global_step,
                           'epsilon': self.epsilon,
                           'net_score': net_score,
-                          'loss': np.mean(self.losses),
+                          'loss': np.mean(self.losses, dtype='float'),
+                          'replay_memory_size': self.replay.size,
                           'dqn_net2': dqn_net2,
-                          'dqn_net3': dqn_net3,
-                          'dqn_net4': dqn_net4,
+                          # 'dqn_net3': dqn_net3,
+                          # 'dqn_net4': dqn_net4,
                           'target_net2': target_net2,
-                          'target_net3': target_net3,
-                          'target_net4': target_net4}, self.step)
+                          # 'target_net3': target_net3,
+                          # 'target_net4': target_net4
+                          }, self.step)
 
-            if global_step % self.persist_step == 0:
+            if global_step % self.persist_step == 0 and global_step > 10:
                 self.persist(global_step)
 
             self.env.close()
 
     def evaluate(self):
-        self.restore()
-
         for _ in range(100):
             self.env.get_initial_states()
 
@@ -241,14 +240,13 @@ class Agent(object):
             self.env.close()
 
     def persist(self, global_step):
-        if self.step % self.save_step == 0:
-            if not os.path.exists('_network'):
-                os.mkdir('_network')
+        if not os.path.exists('_network'):
+            os.mkdir('_network')
 
-            [os.remove(os.path.join('_network', f)) for f in os.listdir('_network')]
+        [os.remove(os.path.join('_network', f)) for f in os.listdir('_network')]
 
-            self.saver.save(self.sess, "_network/neo-dl.ckpt", global_step=global_step)
-            self.logger.info('_network/neo-dl.ckpt has been persisted')
+        self.saver.save(self.sess, "_network/neo-dl.ckpt", global_step=global_step)
+        self.logger.info('_network/neo-dl.ckpt has been persisted')
 
     def restore(self):
         filelist = glob('_network/neo-dl.ckpt*')
@@ -277,8 +275,7 @@ class Agent(object):
 
     def observe(self, state, reward, action, done):
         if self.step > self.pre_train_n:
-            if self.step % self.train_frequency == 0:
-                self.minibatch()
+            self.minibatch()
 
             if self.step % self.target_update_step == 0:
                 self.update_target_network()
@@ -291,20 +288,23 @@ class Agent(object):
         if not self.replay.available:
             return
 
-        prestates, actions, rewards, poststates, terminals = self.replay.sample()
-        clipped_rewards = np.clip(rewards, -1, 1)
+        prestates, stored_actions, rewards, poststates, terminals = self.replay.sample()
 
         # Calculate Target Network
         img_target = self.image_summaries['target']
         target_actions, target_summary = self.sess.run([self.target_output, img_target],
                                                        feed_dict={self.target_input: poststates})
-        target_output = (1 - terminals) * clipped_rewards + self.gamma * np.max(target_actions, axis=1)
 
-        # Calculate Deep Q Network
-        predicted_actions = self.sess.run(self.dqn_output, feed_dict={self.dqn_input: prestates})
-        action_indices = np.argmax(predicted_actions, axis=1)
-        actions = np.zeros(predicted_actions.shape)
-        actions[range(len(actions)), action_indices] = 1
+        clipped_rewards = np.clip(rewards, -1., 1.)
+        target_output = clipped_rewards + self.gamma * np.max(target_actions, axis=1)
+
+        # Calculate Deep Q Network (Predict)
+        # predicted_actions = self.sess.run(self.dqn_output, feed_dict={self.dqn_input: prestates})
+        #
+
+        actions = np.zeros((len(stored_actions), self.env.action_size))
+        for i, action in enumerate(stored_actions):
+            actions[i, action] = 1
 
         # Optimize
         cost = self.optimizer['cost']
@@ -319,7 +319,6 @@ class Agent(object):
         self.writer.add_summary(dqn_summary)
         self.writer.add_summary(target_summary)
         self.losses.append(loss)
-        # self.logger.info('Optimizer ran stochastic gradient descent')
 
     @property
     def epsilon(self):

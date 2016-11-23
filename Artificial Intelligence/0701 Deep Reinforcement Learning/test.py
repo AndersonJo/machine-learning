@@ -1,5 +1,7 @@
 import numpy as np
 
+import cv2
+import gym
 import tensorflow as tf
 import tflearn
 
@@ -53,3 +55,41 @@ def test_clip_by_value():
     with tf.Session(config=tf.ConfigProto(gpu_options=gpu_options)) as sess:
         sess.run(init)
         assert np.array_equal(answer, cliped_data.eval({input1: data}))
+
+
+def test_weird():
+    def build_dqn(num_actions, action_repeat):
+        """
+        Building a DQN.
+        """
+        inputs = tf.placeholder(tf.float32, [None, action_repeat, 84, 84])
+        # Inputs shape: [batch, channel, height, width] need to be changed into
+        # shape [batch, height, width, channel]
+        net = tf.transpose(inputs, [0, 2, 3, 1])
+        net1 = tflearn.conv_2d(net, 32, 8, strides=4, activation='relu')
+        net2 = tflearn.conv_2d(net1, 64, 4, strides=2, activation='relu')
+        net3 = tflearn.fully_connected(net2, 256, activation='relu')
+        q_values = tflearn.fully_connected(net3, num_actions)
+        return inputs, net1, q_values
+
+    env = gym.make('Breakout-v0')
+    inputs, net1, q_values = build_dqn(env.action_space.n, 4)
+    action = env.action_space.sample()
+
+
+
+    init = tf.initialize_all_variables()
+    gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.1, allow_growth=True)
+    with tf.Session(config=tf.ConfigProto(gpu_options=gpu_options)) as sess:
+        sess.run(init)
+
+        for j in range(100):
+            screens = []
+            for i in range(4):
+                screen, reward, done, info = env.step(action)
+                screen = cv2.resize(cv2.cvtColor(screen, cv2.COLOR_RGB2GRAY), (84, 84))
+                screens.append(screen)
+
+            result = q_values.eval(session=sess, feed_dict={inputs: [screens]})
+            print result
+
