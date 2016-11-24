@@ -23,12 +23,11 @@ class Environment(object):
                 break
         self.game.close()
 
-    def step(self, action, gray=True, resize=True):
+    def step(self, action):
         screen, reward, done, info = self.game.step(action)
         screen = self.preprocess(screen)
 
         self.add_screeen(screen)
-
         return screen, reward, done, info
 
     def preprocess(self, screen):

@@ -34,6 +34,8 @@ class ExperienceReplay(object):
         self.count = max(self.count, self.current + 1)
         self.current = (self.current + 1) % self.memory_size
 
+
+
     def getState(self, index):
         assert self.count > 0, "replay memory is empy, use at least --random_steps 1"
         # normalize index to expected range, allows negative indexes

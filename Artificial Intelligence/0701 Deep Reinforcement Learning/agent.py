@@ -73,7 +73,7 @@ class Agent(object):
                                        for i in range(len(self.network_variables))]
 
     def _build_dqn(self, name):
-        input = tf.placeholder('float', [None, self.replay.action_repeat, self.env.height, self.env.width],
+        input = tf.placeholder('float32', [None, self.replay.action_repeat, self.env.height, self.env.width],
                                name=name + '_input')
 
         transposed = tf.transpose(input, [0, 2, 3, 1])
@@ -95,26 +95,26 @@ class Agent(object):
 
     def _build_optimizer_network(self):
         # Define cost and gradient update op
-        y = tf.placeholder("float", [None], name='optimizer_y')
-        a = tf.placeholder("float", [None, self.env.action_size], name='optimizer_a')
+        y = tf.placeholder("float32", [None], name='optimizer_y')
+        a = tf.placeholder("int64", [None], name='optimizer_a')
 
-        dqn_mt = tf.mul(self.dqn_output, a)
-        action_q_values = tf.reduce_sum(dqn_mt, reduction_indices=1)
-        # delta = y - action_q_values
-        cost = tl.mean_square(action_q_values, y)
-        # clipped_delta = tf.clip_by_value(delta, -1, 1)
-        # cost = tf.reduce_mean(tf.square(clipped_delta))
+        action_one_hot = tf.one_hot(a, self.env.action_size, 1.0, 0.0, name='action_one_hot')
+        q_acted = tf.reduce_sum(self.dqn_output * action_one_hot, reduction_indices=1, name='q_acted')
+
+        delta = y - q_acted
+        clipped_delta = tf.clip_by_value(delta, -1, 1)
+        cost = tf.reduce_mean(tf.square(clipped_delta))
+
         optimizer = tf.train.RMSPropOptimizer(learning_rate=0.1, momentum=0.95, epsilon=0.01)
         grad_update = optimizer.minimize(cost, var_list=self.network_variables)
-
-        # regression = regression(net, optimizer=rmsprop)
 
         self.optimizer = {
             'a': a,
             'y': y,
-            'action_q_values': action_q_values,
-            # 'delta': delta,
-            # 'clipped_delta': clipped_delta,
+            'action_one_hot': action_one_hot,
+            'q_acted': q_acted,
+            'delta': delta,
+            'clipped_delta': clipped_delta,
             'cost': cost,
             'optimizer': optimizer,
             'grad_update': grad_update
@@ -175,8 +175,7 @@ class Agent(object):
 
                 # Predict
                 screens = self.env.recent_screens()
-                actions = self.predict([screens])
-                action = np.argmax(actions)
+                action = self.predict([screens])
 
                 # Action!
                 screen, reward, done, info = self.env.step(action)
@@ -194,11 +193,7 @@ class Agent(object):
                     break
 
             dqn_net2 = np.mean(self.sess.run(self.dqn['net2'].W))
-            # dqn_net3 = np.sum(self.sess.run(self.dqn['net3'].W))
-
-            target_net2 = np.mean(self.sess.run(self.target['net2'].W))
-            # target_net3 = np.mean(self.sess.run(self.target['net3'].W))
-
+            print dqn_net2
             self.summary({'global_step': global_step,
                           'epsilon': self.epsilon,
                           'net_score': net_score,
@@ -207,7 +202,7 @@ class Agent(object):
                           'dqn_net2': dqn_net2,
                           # 'dqn_net3': dqn_net3,
                           # 'dqn_net4': dqn_net4,
-                          'target_net2': target_net2,
+                          # 'target_net2': target_net2,
                           # 'target_net3': target_net3,
                           # 'target_net4': target_net4
                           }, self.step)
@@ -225,9 +220,10 @@ class Agent(object):
             while True:
                 self.env.render()
                 screens = self.env.recent_screens()
-                actions = self.predict([screens], epsilon=0.1)
+                actions = self.predict([screens], epsilon=0)
 
                 action = np.argmax(actions)
+
                 screen, reward, done, info = self.env.step(action)
 
                 net_reward += reward
@@ -241,16 +237,16 @@ class Agent(object):
             self.env.close()
 
     def persist(self, global_step):
-        if not os.path.exists('_network'):
-            os.mkdir('_network')
+        if not os.path.exists('_network_backup'):
+            os.mkdir('_network_backup')
 
-        [os.remove(os.path.join('_network', f)) for f in os.listdir('_network')]
+        [os.remove(os.path.join('_network_backup', f)) for f in os.listdir('_network_backup')]
 
-        self.saver.save(self.sess, "_network/neo-dl.ckpt", global_step=global_step)
-        self.logger.info('_network/neo-dl.ckpt has been persisted')
+        self.saver.save(self.sess, "_network_backup/neo-dl.ckpt", global_step=global_step)
+        self.logger.info('_network_backup/neo-dl.ckpt has been persisted')
 
     def restore(self):
-        filelist = glob('_network/neo-dl.ckpt*')
+        filelist = glob('qlearning.ckpt*')
         saved_files = list()
         for f in filelist:
             match = re.search(r'neo-dl\.ckpt-(?P<number>\d+)$', f)
@@ -265,14 +261,12 @@ class Agent(object):
     def predict(self, screens, epsilon=None):
         epsilon = epsilon if epsilon is not None else self.epsilon
 
-        actions = np.zeros(self.env.action_size)
         if random.random() < epsilon:
-            action_index = self.env.random_action()
+            action = self.env.random_action()
         else:
-            action_index = np.argmax(self.sess.run(self.dqn_output, feed_dict={self.dqn_input: screens}), axis=1)
+            action = np.argmax(self.sess.run(self.dqn_output, feed_dict={self.dqn_input: screens}), axis=1)[0]
 
-        actions[action_index] = 1
-        return actions
+        return action
 
     def observe(self, state, reward, action, done):
         if self.step > self.pre_train_n:
@@ -289,15 +283,17 @@ class Agent(object):
         if not self.replay.available:
             return
 
-        prestates, stored_actions, rewards, poststates, terminals = self.replay.sample()
+        prestates, actions, rewards, poststates, terminals = self.replay.sample()
 
         # Calculate Target Network
         img_target = self.image_summaries['target']
-        target_actions, target_summary = self.sess.run([self.target_output, img_target],
-                                                       feed_dict={self.target_input: poststates})
+        target_actions = self.sess.run(self.target_output,
+                                       feed_dict={self.target_input: poststates})
 
-        clipped_rewards = np.clip(rewards, -1., 1.)
-        target_output = clipped_rewards + self.gamma * np.max(target_actions, axis=1)
+        # clipped_rewards = np.clip(rewards, -1., 1.)
+
+        terminals = np.array(terminals) + 0.
+        target_output = rewards + self.gamma * np.max(target_actions, axis=1) * (1 - terminals)
 
         # Calculate Deep Q Network (Predict)
         # predicted_actions = self.sess.run(self.dqn_output, feed_dict={self.dqn_input: prestates})
@@ -305,10 +301,9 @@ class Agent(object):
         # actions = np.zeros(predicted_actions.shape)
         # actions[range(len(actions)), action_indices] = 1
 
-        actions = np.zeros((len(stored_actions), self.env.action_size))
-        for i, action in enumerate(stored_actions):
-            actions[i, action] = 1
-
+        # actions = np.zeros((len(stored_actions), self.env.action_size))
+        # for i, action in enumerate(stored_actions):
+        #     actions[i, action] = 1
 
         # Optimize
         # 'dqn_mt': dqn_mt,
@@ -318,17 +313,14 @@ class Agent(object):
         # 'cost': cost,
         cost = self.optimizer['cost']
         grad_update = self.optimizer['grad_update']
-
         img_dqn = self.image_summaries['dqn']
-
         dqn_summary, loss, _ = self.sess.run([img_dqn, cost, grad_update],
                                              feed_dict={self.dqn_input: prestates,
                                                         self.optimizer['a']: actions,
                                                         self.optimizer['y']: target_output})
 
-
         self.writer.add_summary(dqn_summary)
-        self.writer.add_summary(target_summary)
+        # self.writer.add_summary(target_summary)
         self.losses.append(loss)
 
     @property

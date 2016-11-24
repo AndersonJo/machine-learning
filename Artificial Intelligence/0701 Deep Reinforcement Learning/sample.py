@@ -40,7 +40,7 @@ testing = False
 test_model_path = '/path/to/your/qlearning.tflearn.ckpt'
 # Atari game to learn
 # You can also try: 'Breakout-v0', 'Pong-v0', 'SpaceInvaders-v0', ...
-game = 'MsPacman-v0'
+game = 'Breakout-v0'
 # Learning threads
 n_threads = 8
 

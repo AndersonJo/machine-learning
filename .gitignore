@@ -17,6 +17,7 @@ cifar-10-batches-py
 *.model
 *.tfmodel
 _network
+_network_backup
 
 # R
 .Rhistory

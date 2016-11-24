@@ -4,6 +4,7 @@ import cv2
 import gym
 import tensorflow as tf
 import tflearn
+from environment import Environment
 
 
 def test_argmax():
@@ -72,24 +73,28 @@ def test_weird():
         q_values = tflearn.fully_connected(net3, num_actions)
         return inputs, net1, q_values
 
-    env = gym.make('Breakout-v0')
-    inputs, net1, q_values = build_dqn(env.action_space.n, 4)
-    action = env.action_space.sample()
-
-
+    env = Environment('Breakout-v0')
+    inputs, net1, q_values = build_dqn(env.action_size, 4)
 
     init = tf.initialize_all_variables()
     gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.1, allow_growth=True)
     with tf.Session(config=tf.ConfigProto(gpu_options=gpu_options)) as sess:
         sess.run(init)
 
-        for j in range(100):
+        screens = env.get_initial_states()
+        net_screens = []
+        for i in range(30):
             screens = []
-            for i in range(4):
+            for j in range(4):
+                action = env.random_action()
                 screen, reward, done, info = env.step(action)
-                screen = cv2.resize(cv2.cvtColor(screen, cv2.COLOR_RGB2GRAY), (84, 84))
                 screens.append(screen)
+            if done:
+                env.reset()
+                break
+            net_screens.append(screens)
 
-            result = q_values.eval(session=sess, feed_dict={inputs: [screens]})
-            print result
-
+        predicted_actions = q_values.eval(session=sess, feed_dict={inputs: net_screens})
+        action_indices = np.argmax(predicted_actions, axis=1)
+        print predicted_actions
+        print action_indices
