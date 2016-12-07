@@ -38,3 +38,7 @@
 **Recurrent Neural Network**
 
 * [Predicting the Next Word with Python](https://github.com/AndersonJo/neo-notebook/blob/master/Artificial%20Intelligence%20Tutorial/0200%20RNN%20Predicting%20the%20next%20word%20via%20Python/Predicting%20the%20Next%20Word.ipynb)
+
+** Reinforcement Learning **
+
+* [Deep Reinforcement Learning Part 1](https://github.com/AndersonJo/neo-notebook/blob/master/Artificial%20Intelligence%20Tutorial/0701%20Deep%20Reinforcement%20Learning/01%20Deep%20Reinforcement%20Learning%20Part%201.ipynb)
