@@ -13,6 +13,9 @@ _site
 *.alz
 cifar-10-batches-py
 
+# Specific Data
+imdb_full.pkl
+
 # TensorFlow Model
 *.model
 *.tfmodel
