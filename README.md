@@ -42,7 +42,7 @@
 
 * [Predicting Medical Expenses](https://github.com/AndersonJo/neo-notebook/blob/master/Artificial%20Intelligence%20Tutorial/0004%20Multiple%20Linear%20Regression/Multiple%20Linear%20Regression%20-%20Predicting%20Medical%20Expenses.ipynb)
 
-** Convolutional Neural Network **
+**Convolutional Neural Network**
 
 * [CNN (CIFAR-10) with TFLearn](https://github.com/AndersonJo/neo-notebook/blob/master/Artificial%20Intelligence%20Tutorial/0100%20Convolutional%20Neural%20Network/CNN%20(CIFAR-10)%20with%20TFLearn.ipynb)
 
