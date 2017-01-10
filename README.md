@@ -67,6 +67,11 @@
 
 * [Predicting the Next Word with Python](https://github.com/AndersonJo/neo-notebook/blob/master/Artificial%20Intelligence%20Tutorial/0200%20RNN%20Predicting%20the%20next%20word%20via%20Python/Predicting%20the%20Next%20Word.ipynb)
 
+**LSTM**
+
+* [Understanding International Airline Passengers Data with Pandas](https://github.com/AndersonJo/neo-notebook/blob/master/Artificial%20Intelligence%20Tutorial/0301%20LSTM%20Recurrent%20Neural%20Networks/01%20Understanding%20International%20Airline%20Passengers%20Data%20with%20Pandas.ipynb)
+* [LSTM - International Airline Passengers prediction problem](https://github.com/AndersonJo/neo-notebook/blob/master/Artificial%20Intelligence%20Tutorial/0301%20LSTM%20Recurrent%20Neural%20Networks/02%20LSTM%20-%20International%20Airline%20Passengers%20prediction%20problem.ipynb)
+
 **Reinforcement Learning**
 
 * [Deep Reinforcement Learning Part 1](https://github.com/AndersonJo/neo-notebook/blob/master/Artificial%20Intelligence%20Tutorial/0701%20Deep%20Reinforcement%20Learning/01%20Deep%20Reinforcement%20Learning%20Part%201.ipynb)
