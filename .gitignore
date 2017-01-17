@@ -21,6 +21,7 @@ imdb_full.pkl
 *.tfmodel
 _network
 _network_backup
+_tfmodel
 
 # R
 .Rhistory
