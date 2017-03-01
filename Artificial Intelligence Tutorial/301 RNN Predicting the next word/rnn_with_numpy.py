@@ -81,8 +81,10 @@ class RNNNumpy(object):
         N = len(y_train)
         loss_show = N / 10
 
-        print 'Start Training'
-        print 'Total Data: ', N
+        print
+        'Start Training'
+        print
+        'Total Data: ', N
 
         for i in xrange(npoch):
             # One SGD step
@@ -94,7 +96,8 @@ class RNNNumpy(object):
     @staticmethod
     def _print_error(cost, i):
         t = datetime.now()
-        print '{time}: i={i}, cost={cost}'.format(time=t, i=i, cost=cost)
+        print
+        '{time}: i={i}, cost={cost}'.format(time=t, i=i, cost=cost)
 
     def softmax(self, v, t=1.0):
         e = np.exp(v / t)
