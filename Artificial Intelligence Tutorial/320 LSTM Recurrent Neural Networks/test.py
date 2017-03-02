@@ -6,6 +6,7 @@ import tensorflow as tf
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow.contrib.rnn import BasicLSTMCell
 from tensorflow.contrib.rnn import MultiRNNCell
+from sklearn.metrics  import hinge_loss
 
 # Load Data
 data = pd.read_csv('../../data/time-series/international-airline-passengers.csv',
