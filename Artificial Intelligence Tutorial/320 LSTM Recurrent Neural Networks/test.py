@@ -6,7 +6,6 @@ import tensorflow as tf
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow.contrib.rnn import BasicLSTMCell
 from tensorflow.contrib.rnn import MultiRNNCell
-from sklearn.metrics  import hinge_loss
 
 # Load Data
 data = pd.read_csv('../../data/time-series/international-airline-passengers.csv',
@@ -91,6 +90,9 @@ class AirlinePassengerModel(object):
         with tf.variable_scope(scope_name) as scope:
             # Create RNN Model
             make_rnn = lambda: BasicLSTMCell(size, forget_bias=1.0, state_is_tuple=True)
+            rnn = BasicLSTMCell(size, forget_bias=1.0, state_is_tuple=True)
+            # self._init_state = rnn.zero_state(size, dtype='float32')
+            # self.cell, _state = tf.nn.dynamic_rnn(rnn, self.input, initial_state=self._init_state)
             self.cell = MultiRNNCell([make_rnn() for _ in range(n_layers)], state_is_tuple=True)
             self._init_state = self.cell.zero_state(size, dtype='float32')
 
@@ -106,11 +108,11 @@ class AirlinePassengerModel(object):
         self.sess.as_default()
         # self.sess.run(init_op)
 
-    def fit(self, train_x, train_y):
+    def fit(self, train_x, train_y, n_epoch=1):
         N = max(train_x.get_shape())
-        self.N = N
 
-        for epoch in range(2):
+        for epoch in range(n_epoch):
+            print(f'Start epoch: {epoch}')
             with tf.variable_scope(self.scope_name) as scope:
                 if epoch >= 1:
                     scope.reuse_variables()
@@ -133,10 +135,12 @@ class AirlinePassengerModel(object):
             print(self.sess.run(train_fn))
 
     def predict(self, data_x, data_y):
+        N = max(data_x.get_shape())
+
         scope = tf.get_variable_scope()
         outputs = []
         state = self._init_state
-        for t in range(self.N):
+        for t in range(N):
             cell_output, state = self.cell(data_x[t, :, :], state)
             outputs.append(cell_output)
             if t == 0 and scope:
@@ -155,7 +159,9 @@ class AirlinePassengerModel(object):
         return embedded_x, embedded_y
 
     def display(self, tensor):
-        self.sess.run(tensor)
+        init_op = tf.global_variables_initializer()
+        self.sess.run(init_op)
+        print(self.sess.run(tensor))
 
 
 model = AirlinePassengerModel(size=1, n_layers=4)
