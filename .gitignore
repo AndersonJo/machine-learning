@@ -11,6 +11,7 @@ _site
 *.gz
 *.zip
 *.alz
+*.data
 cifar-10-batches-py
 
 # Specific Data
