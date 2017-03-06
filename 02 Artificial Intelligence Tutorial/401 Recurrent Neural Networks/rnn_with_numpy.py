@@ -30,7 +30,7 @@ class RNNNumpy(object):
         # The outputs at each time step. Again, we save them for later.
         o = np.zeros((T, self.word_dim))
 
-        for t in xrange(T):
+        for t in range(T):
             s[t] = np.tanh(self.U[:, x[t]] + self.W.dot(s[t - 1]))
             o[t] = self.softmax(self.V.dot(s[t]))
 
@@ -81,14 +81,12 @@ class RNNNumpy(object):
         N = len(y_train)
         loss_show = N / 10
 
-        print
-        'Start Training'
-        print
-        'Total Data: ', N
+        print('Start Training')
+        print('Total Data: ', N)
 
-        for i in xrange(npoch):
+        for i in range(npoch):
             # One SGD step
-            rand_idx = randint(0, N)
+            rand_idx = randint(0, N-1)
             self.calculate_gradients(x_train[rand_idx], y_train[rand_idx], learning_rate)
             if i % 100 == 0:
                 self._print_error(self.cross_entropy(x_train[i], y_train[i]), i)
@@ -96,7 +94,6 @@ class RNNNumpy(object):
     @staticmethod
     def _print_error(cost, i):
         t = datetime.now()
-        print
         '{time}: i={i}, cost={cost}'.format(time=t, i=i, cost=cost)
 
     def softmax(self, v, t=1.0):
