@@ -12,6 +12,7 @@ _site
 *.zip
 *.alz
 *.data
+*.npz
 cifar-10-batches-py
 
 # Specific Data
