@@ -8,6 +8,7 @@ _site
 .ipynb_checkpoints
 
 # Data
+_data
 *.gz
 *.zip
 *.alz
