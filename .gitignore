@@ -15,6 +15,7 @@ _data
 *.data
 *.npz
 cifar-10-batches-py
+*.h5
 
 # Specific Data
 imdb_full.pkl
