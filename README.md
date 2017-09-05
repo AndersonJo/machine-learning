@@ -1,8 +1,3 @@
-# Deprecated 
-
-I am going to split the project to several git repositories due to the amount of codes. 
-
-
 # Anderson's Notebook
 
 앤더슨의 개발 노트북입니다.<br>
