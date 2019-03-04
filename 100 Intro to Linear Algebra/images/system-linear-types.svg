@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Copyright 2017 mathsisfun.com -->
+<svg xmlns="http://www.w3.org/2000/svg" width="553.2" height="254.8" version="1.1" style="font-family:'Comic Sans MS'; font-size:15.1px; fill:none; stroke-width:2.37;">
+<defs>
+	<marker id="id1" style="overflow:visible;" orient="auto">
+		<path transform="matrix(-0.4,0,0,-0.4,-4,0)" style="stroke:black; stroke-width:1pt;" d="M 0,0 5,-5 -12.5,0 5,5 Z"/>
+	</marker>
+</defs>
+<g transform="translate(1991.44,-887.274)">
+	<g transform="matrix(0.227184,0,0,0.227184,-1800.3,891.414)">
+		<g transform="translate(-853.459,49.8897)">
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,601.7 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,535.6 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,469.4 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,403.3 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,932.5 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,800.2 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,734 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,667.9 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 926.5,866.3 H 1453.2"/>
+		</g>
+		<g transform="rotate(-90,786.875,1119.55)">
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,601.7 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,535.6 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,469.4 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,403.3 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,932.5 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,800.2 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,734 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,667.9 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 926.5,866.3 H 1453.2"/>
+		</g>
+	</g>
+	<path style="marker-end:url(#id1); fill:#2e3436; fill-opacity:0.75; stroke:#2e3436; stroke-width:0.81;" d="m -1810.9,1084.6 h 143.6"/>
+	<path style="marker-end:url(#id1); fill:#2e3436; fill-opacity:0.75; stroke:#2e3436; stroke-width:0.81;" d="M -1769.3,1142.1 V 1002.8"/>
+	<text x="-1678.4" y="1095.8" style="font-weight:bold; font-style:italic; overflow:visible; fill:black; stroke-width:0.5px;">x</text>
+	<text x="-1780.5" y="1009.6" style="font-weight:bold; font-style:italic; overflow:visible; fill:black; stroke-width:0.5px;">y</text>
+	<path style="color:black; overflow:visible; stroke:#0169c9; stroke-width:1.43;" d="m -1804.9,1089.5 154.6,-101.2"/>
+	<path style="color:black; overflow:visible; fill:#f44800; stroke:#f44800; stroke-width:1.43;" d="m -1755.2,959.2 51.4,177.4"/>
+	<g transform="matrix(0.227184,0,0,0.227184,-1607.74,891.414)">
+		<g transform="translate(-853.459,49.8897)">
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,601.7 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,535.6 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,469.4 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,403.3 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,932.5 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,800.2 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,734 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,667.9 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 926.5,866.3 H 1453.2"/>
+		</g>
+		<g transform="rotate(-90,786.875,1119.55)">
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,601.7 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,535.6 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,469.4 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,403.3 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,932.5 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,800.2 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,734 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,667.9 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 926.5,866.3 H 1453.2"/>
+		</g>
+	</g>
+	<path style="marker-end:url(#id1); fill:#2e3436; fill-opacity:0.75; stroke:#2e3436; stroke-width:0.81;" d="m -1618.4,1084.6 h 143.6"/>
+	<path style="marker-end:url(#id1); fill:#2e3436; fill-opacity:0.75; stroke:#2e3436; stroke-width:0.81;" d="M -1576.7,1142.1 V 1002.8"/>
+	<text x="-1485.8" y="1095.8" style="font-weight:bold; font-style:italic; overflow:visible; fill:black; stroke-width:0.5px;">x</text>
+	<text x="-1587.9" y="1009.6" style="font-weight:bold; font-style:italic; overflow:visible; fill:black; stroke-width:0.5px;">y</text>
+	<path style="color:black; overflow:visible; stroke:#f44800; stroke-width:1.43;" d="m -1608.9,1102.7 154.6,-101.2"/>
+	<g transform="matrix(0.227184,0,0,0.227184,-1980.8,891.414)">
+		<g transform="translate(-853.459,49.8897)">
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,601.7 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,535.6 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,469.4 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,403.3 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,932.5 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,800.2 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,734 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,667.9 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 926.5,866.3 H 1453.2"/>
+		</g>
+		<g transform="rotate(-90,786.875,1119.55)">
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,601.7 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,535.6 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,469.4 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,403.3 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,932.5 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,800.2 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,734 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 924.1,667.9 H 1450.8"/>
+			<path style="stroke:#d8dadc; stroke-dasharray:18.9, 2.4;" d="M 926.5,866.3 H 1453.2"/>
+		</g>
+	</g>
+	<path style="marker-end:url(#id1); fill:#2e3436; fill-opacity:0.75; stroke:#2e3436; stroke-width:0.81;" d="m -1991.4,1084.6 h 143.6"/>
+	<path style="marker-end:url(#id1); fill:#2e3436; fill-opacity:0.75; stroke:#2e3436; stroke-width:0.81;" d="M -1949.8,1142.1 V 1002.8"/>
+	<text x="-1858.9" y="1095.8" style="font-weight:bold; font-style:italic; overflow:visible; fill:black; stroke-width:0.5px;">x</text>
+	<text x="-1961" y="1009.6" style="font-weight:bold; font-style:italic; overflow:visible; fill:black; stroke-width:0.5px;">y</text>
+	<path style="color:black; overflow:visible; stroke:#0169c9; stroke-width:1.43;" d="m -1982,1102.7 154.6,-101.2"/>
+	<path style="color:black; overflow:visible; fill:#f44800; stroke:#f44800; stroke-width:1.3;" d="m -1971.3,1122.8 140.8,-92.2"/>
+	<text x="-1674.4" y="1065.9" style="text-align:center; text-anchor:middle; font-size:12.9px; color:black; overflow:visible; fill:#f0a513; stroke-width:1.25;">intersect</text>
+	<path style="color:black; overflow:visible; fill:#f0a513; stroke-width:2.65;" d="m -1721.5,1045.5 c 0.1,0 0.3,0 0.4,0.1 0.1,0 0.3,0.1 0.4,0.1 0.1,0 0.3,0.1 0.4,0.1 0.1,0 0.3,0.1 0.4,0.1 0.1,0.1 0.3,0.1 0.4,0.1 0.1,0 0.3,0.1 0.4,0.1 0.1,0.1 0.3,0.1 0.4,0.1 0.2,0 0.3,0.1 0.4,0.1 0.2,0 0.3,0.1 0.4,0.2 0.2,0 0.3,0.1 0.4,0.2 0.2,0.1 0.3,0.1 0.5,0.2 0.2,0.1 0.3,0.2 0.4,0.2 0.1,0.1 0.3,0.2 0.4,0.2 0.1,0.1 0.3,0.2 0.4,0.2 0.1,0.1 0.3,0.2 0.4,0.3 0.1,0.1 0.2,0.2 0.4,0.3 0.1,0.1 0.2,0.2 0.4,0.3 0.1,0.1 0.2,0.2 0.4,0.3 0.1,0.1 0.2,0.3 0.3,0.4 0.1,0.1 0.2,0.3 0.3,0.4 0.1,0.1 0.2,0.3 0.3,0.4 0.1,0.2 0.2,0.3 0.3,0.5 0.1,0.2 0.2,0.3 0.3,0.5 0.1,0.2 0.2,0.3 0.3,0.5 0.1,0.2 0.2,0.3 0.2,0.5 0.1,0.2 0.2,0.3 0.2,0.5 0.1,0.2 0.1,0.3 0.2,0.5 0.1,0.1 0.1,0.3 0.2,0.4 0.1,0.1 0.1,0.3 0.2,0.4 0.1,0.1 0.1,0.3 0.2,0.4 0.1,0.1 0.1,0.3 0.2,0.4 0.1,0.1 0.1,0.2 0.2,0.4 0.1,0.1 0.2,0.3 0.2,0.4 0.1,0.1 0.2,0.3 0.2,0.4 0.1,0.1 0.2,0.2 0.2,0.3 0.1,0.1 0.1,0.2 0.2,0.3 0.1,0.1 0.1,0.2 0.2,0.3 0.1,0.1 0.2,0.2 0.2,0.3 0.1,0.1 0.2,0.2 0.2,0.3 0.1,0.1 0.2,0.2 0.2,0.3 0.1,0.1 0.2,0.2 0.3,0.3 0.1,0.1 0.2,0.2 0.3,0.3 0.1,0.1 0.2,0.2 0.3,0.3 0.1,0.1 0.2,0.2 0.3,0.3 0.1,0.1 0.2,0.2 0.3,0.2 0.1,0.1 0.2,0.2 0.3,0.2 0.1,0.1 0.2,0.1 0.3,0.2 0.1,0.1 0.2,0.1 0.3,0.2 0.1,0.1 0.2,0.1 0.3,0.2 0.1,0.1 0.2,0.1 0.3,0.2 0.1,0 0.2,0.1 0.3,0.1 0.1,0 0.2,0.1 0.3,0.1 0.1,0 0.2,0.1 0.3,0.1 0.1,0 0.2,0.1 0.3,0.1 0.1,0 0.2,0.1 0.3,0.1 0.1,0 0.2,0.1 0.3,0.1 0.1,0 0.2,0.1 0.3,0.1 0.1,0 0.2,0.1 0.3,0.1 0.1,0 0.2,0.1 0.3,0.1 0.1,0.1 0.2,0.1 0.3,0.1 0.1,0 0.2,0 0.2,0.1 0.1,0 0.1,0 0.2,0.1 0.1,0 0.2,0 0.2,0.1 0.1,0 0.1,0 0.2,0.1 0,0 0.1,0 0.2,0 0,0 0.1,0 0.1,0 0.1,0 0.1,0 0.1,0 0,0 0.1,0.1 0.1,0.1 0,0 -0.8,1.7 -0.8,1.7 v 0 c 0,0 0.1,0.1 0.1,0 -0.1,0 -0.1,0 -0.1,0 0,0 -0.1,0 -0.1,0 -0.1,0 -0.1,0 -0.2,0 -0.1,0 -0.1,0 -0.2,-0.1 -0.1,0 -0.1,-0.1 -0.2,-0.1 -0.1,0 -0.2,0 -0.3,-0.1 -0.1,0 -0.2,-0.1 -0.3,-0.1 -0.1,0 -0.2,-0.1 -0.3,-0.1 -0.1,0 -0.2,-0.1 -0.3,-0.1 -0.1,0 -0.2,-0.1 -0.3,-0.1 -0.1,-0.1 -0.2,-0.1 -0.3,-0.1 -0.1,0 -0.2,-0.1 -0.3,-0.1 -0.1,-0.1 -0.2,-0.1 -0.3,-0.1 -0.1,0 -0.2,-0.1 -0.3,-0.1 -0.1,0 -0.2,-0.1 -0.3,-0.1 -0.1,0 -0.2,-0.1 -0.4,-0.2 -0.1,0 -0.2,-0.1 -0.4,-0.2 -0.1,-0.1 -0.2,-0.1 -0.3,-0.2 -0.1,-0.1 -0.2,-0.1 -0.4,-0.2 -0.1,-0.1 -0.2,-0.2 -0.3,-0.2 -0.1,-0.1 -0.2,-0.2 -0.3,-0.2 -0.1,-0.1 -0.2,-0.2 -0.3,-0.3 -0.1,-0.1 -0.2,-0.2 -0.4,-0.3 -0.1,-0.1 -0.2,-0.2 -0.3,-0.3 -0.1,-0.1 -0.2,-0.2 -0.3,-0.3 -0.1,-0.1 -0.2,-0.2 -0.3,-0.3 -0.1,-0.1 -0.2,-0.2 -0.3,-0.4 -0.1,-0.1 -0.2,-0.2 -0.3,-0.3 -0.1,-0.1 -0.2,-0.2 -0.2,-0.3 -0.1,-0.1 -0.2,-0.2 -0.3,-0.3 -0.1,-0.1 -0.2,-0.2 -0.3,-0.4 -0.1,-0.1 -0.2,-0.2 -0.2,-0.4 -0.1,-0.1 -0.2,-0.2 -0.2,-0.4 -0.1,-0.1 -0.2,-0.3 -0.3,-0.4 -0.1,-0.1 -0.2,-0.3 -0.2,-0.4 -0.1,-0.1 -0.2,-0.3 -0.2,-0.4 -0.1,-0.1 -0.1,-0.3 -0.2,-0.4 -0.1,-0.1 -0.2,-0.3 -0.2,-0.4 -0.1,-0.1 -0.1,-0.3 -0.2,-0.4 -0.1,-0.1 -0.1,-0.3 -0.2,-0.4 -0.1,-0.1 -0.1,-0.3 -0.2,-0.4 -0.1,-0.2 -0.1,-0.3 -0.2,-0.5 -0.1,-0.1 -0.1,-0.3 -0.2,-0.4 -0.1,-0.1 -0.1,-0.3 -0.2,-0.4 -0.1,-0.1 -0.2,-0.3 -0.2,-0.4 -0.1,-0.1 -0.2,-0.3 -0.2,-0.4 -0.1,-0.1 -0.2,-0.2 -0.3,-0.4 -0.1,-0.1 -0.2,-0.2 -0.2,-0.3 -0.1,-0.1 -0.2,-0.2 -0.2,-0.3 -0.1,-0.1 -0.2,-0.2 -0.3,-0.3 -0.1,-0.1 -0.2,-0.2 -0.3,-0.2 -0.1,-0.1 -0.2,-0.2 -0.3,-0.2 -0.1,-0.1 -0.2,-0.1 -0.3,-0.2 -0.1,-0.1 -0.2,-0.1 -0.3,-0.2 -0.1,-0.1 -0.2,-0.1 -0.3,-0.2 -0.1,-0.1 -0.2,-0.1 -0.4,-0.2 -0.1,-0.1 -0.2,-0.1 -0.4,-0.2 -0.1,0 -0.3,-0.1 -0.4,-0.1 -0.1,0 -0.3,-0.1 -0.4,-0.1 -0.1,-0.1 -0.3,-0.1 -0.4,-0.1 -0.2,0 -0.3,-0.1 -0.4,-0.1 -0.1,-0.1 -0.3,-0.1 -0.4,-0.1 -0.1,0 -0.3,-0.1 -0.4,-0.1 -0.1,-0.1 -0.3,-0.1 -0.4,-0.1 -0.1,0 -0.2,-0.1 -0.4,-0.1 -0.1,0 -0.2,0 -0.3,-0.1 -0.1,0 -0.2,0 -0.3,0 0,0 0.2,-1.9 0.2,-1.9 z"/>
+	<path style="color:black; overflow:visible; fill:#f0a513; stroke-width:2.65;" d="m -1723.6,1044.3 c 0.1,0 0.2,0 0.3,0.1 0.1,0.1 0.3,0.1 0.4,0.1 0.1,0 0.3,0.1 0.4,0.1 0.1,0 0.3,0 0.4,0.1 0.2,0.1 0.3,0.1 0.5,0.1 0.2,0 0.4,0 0.5,0 0.2,0 0.4,0 0.6,0.1 0.2,0 0.4,0 0.5,0 0.2,0 0.4,0 0.6,0.1 0.2,0 0.4,0 0.6,0 0.2,0 0.3,0 0.5,0 0.2,0 0.3,0 0.5,0 0.1,0 0.3,0 0.4,0 0.1,0 0.3,0 0.4,0 0.1,0 0.3,0 0.4,0 0.1,0 0.2,0 0.3,0 0.1,0 0.2,0 0.3,-0.1 0.1,0 0.2,0 0.3,0 0,0 0.1,0 0.1,0 0.1,0 0.1,0 0.2,-0.1 0.1,0 0.1,0 0.2,-0.1 0.1,0 0.1,0 0.2,-0.1 0.1,0 0.1,0 0.2,-0.1 0,0 0.1,0 0.2,-0.1 0,0 0.1,-0.1 0.2,-0.1 0.1,0 0.1,0 0.1,0 0.1,0 0,0 0,0 0,0 0,0 0,0 0,0 0.1,0 0.1,-0.1 0.1,0 0.1,0 0.1,-0.1 0,0 0.1,0 0.1,-0.1 0,0 0.8,1.7 0.8,1.7 v 0 c 0,0 0.1,0 0.1,0 0,0 -0.1,0 -0.1,0.1 0,0.1 -0.1,0.1 -0.1,0.1 -0.1,0 -0.1,0.1 -0.2,0.1 -0.1,0 -0.1,0.1 -0.2,0.1 0,0 -0.1,0.1 -0.1,0.1 0,0 -0.1,0 -0.1,0 0,0 -0.1,0 -0.2,0.1 -0.1,0 -0.2,0.1 -0.2,0.1 -0.1,0 -0.1,0.1 -0.2,0.1 -0.1,0 -0.2,0.1 -0.2,0.1 -0.1,0 -0.2,0.1 -0.3,0.1 -0.1,0 -0.2,0.1 -0.4,0.1 -0.1,0 -0.2,0 -0.3,0 -0.1,0 -0.2,0 -0.4,0 -0.1,0 -0.3,0 -0.4,0 -0.1,0 -0.3,0 -0.4,0 -0.2,0 -0.3,0 -0.5,0 -0.2,0 -0.3,0 -0.5,0 -0.2,0 -0.3,0 -0.5,0 -0.2,0 -0.4,0 -0.5,0 -0.2,0 -0.4,0 -0.6,0 -0.2,0 -0.4,0 -0.6,0 -0.2,0 -0.4,0 -0.6,0 -0.2,0 -0.4,-0.1 -0.5,-0.1 -0.2,0 -0.4,0 -0.6,-0.1 -0.2,0 -0.4,0 -0.6,-0.1 -0.2,0 -0.3,0 -0.5,-0.1 -0.2,0 -0.3,-0.1 -0.5,-0.1 -0.1,0 -0.3,-0.1 -0.4,-0.1 -0.1,0 -0.3,-0.1 -0.4,-0.1 0,0 0.6,-1.8 0.6,-1.8 z"/>
+	<path style="color:black; overflow:visible; fill:#f0a513; stroke-width:2.65;" d="m -1722.7,1044.5 c 0.1,0 0.2,0.1 0.3,0.1 0.1,0.1 0.2,0.1 0.4,0.2 0.1,0.1 0.3,0.1 0.4,0.2 0.1,0.1 0.3,0.1 0.4,0.2 0.1,0.1 0.3,0.2 0.4,0.3 0.1,0.1 0.3,0.2 0.4,0.3 0.1,0.1 0.2,0.2 0.3,0.3 0.1,0.1 0.2,0.2 0.3,0.3 0.1,0.1 0.2,0.2 0.3,0.3 0.1,0.1 0.2,0.2 0.3,0.3 0.1,0.1 0.2,0.2 0.3,0.4 0.1,0.1 0.2,0.3 0.3,0.4 0.1,0.1 0.2,0.3 0.2,0.4 0.1,0.1 0.2,0.2 0.2,0.3 0.1,0.1 0.1,0.2 0.2,0.3 0.1,0.1 0.1,0.2 0.2,0.4 0.1,0.1 0.1,0.2 0.2,0.3 0.1,0.1 0.1,0.2 0.2,0.3 0,0.1 0.1,0.2 0.2,0.3 0,0.1 0.1,0.2 0.1,0.3 0,0.1 0.1,0.2 0.1,0.3 0,0.1 0.1,0.2 0.1,0.3 0,0.1 0,0.2 0.1,0.3 0,0.1 0.1,0.2 0.1,0.2 0,0.1 0,0.2 0,0.3 0,0.1 0,0.2 0,0.3 0,0.1 0,0.2 0,0.3 0,0.1 0,0.2 0,0.2 0,0.1 0,0.2 0,0.3 0,0.1 0,0.2 0,0.2 0,0.1 0,0.1 0,0.2 0,0 0,0.1 0,0.2 0,0.1 0,0.1 0,0.1 0,0 0,0.1 0,0.1 0,0 0,0.1 0,0 0,0 -1.9,0.3 -1.9,0.3 v 0 c 0,-0.1 0,-0.1 0,-0.2 0,0 0,-0.1 0,-0.1 0,0 0,-0.1 0,-0.1 0,0 0,-0.1 0,-0.2 0,-0.1 0,-0.1 0,-0.2 0,-0.1 0,-0.1 0,-0.2 0,-0.1 0,-0.1 0,-0.2 0,-0.1 0,-0.1 0,-0.2 0,-0.1 0,-0.2 0,-0.2 0,-0.1 0,-0.1 -0.1,-0.2 0,-0.1 0,-0.1 0,-0.2 0,-0.1 0,-0.1 0,-0.2 0,-0.1 0,-0.1 -0.1,-0.2 0,-0.1 0,-0.2 -0.1,-0.2 0,-0.1 -0.1,-0.2 -0.1,-0.2 0,-0.1 -0.1,-0.2 -0.1,-0.3 0,-0.1 -0.1,-0.2 -0.1,-0.3 0,-0.1 -0.1,-0.2 -0.1,-0.3 0,-0.1 -0.1,-0.2 -0.1,-0.3 -0.1,-0.1 -0.1,-0.2 -0.2,-0.3 -0.1,-0.1 -0.1,-0.2 -0.2,-0.3 -0.1,-0.1 -0.1,-0.2 -0.2,-0.3 -0.1,-0.1 -0.1,-0.2 -0.2,-0.3 -0.1,-0.1 -0.1,-0.2 -0.2,-0.3 -0.1,-0.1 -0.2,-0.2 -0.2,-0.3 -0.1,-0.1 -0.2,-0.2 -0.2,-0.3 -0.1,-0.1 -0.1,-0.2 -0.2,-0.2 -0.1,-0.1 -0.2,-0.2 -0.3,-0.2 -0.1,-0.1 -0.2,-0.2 -0.3,-0.2 -0.1,-0.1 -0.2,-0.1 -0.3,-0.2 -0.1,-0.1 -0.2,-0.1 -0.3,-0.2 -0.1,-0.1 -0.2,-0.1 -0.3,-0.2 -0.1,0 -0.2,-0.1 -0.3,-0.1 -0.1,-0.1 -0.2,-0.1 -0.3,-0.1 -0.1,0 -0.2,-0.1 -0.3,-0.1 0,0 0.7,-1.8 0.7,-1.8 z"/>
+	<text x="-1852.2" y="22.1" transform="rotate(-33.6594)" style="text-align:center; text-anchor:middle; font-size:12.9px; color:black; overflow:visible; fill:#f0a513; stroke-width:1.25;">same line</text>
+	<text x="-2156.2" y="-166" transform="rotate(-33.6594)" style="text-align:center; text-anchor:middle; font-size:12.9px; color:black; overflow:visible; fill:#f0a513; stroke-width:1.25;">parallel</text>
+	<rect x="-1987.8" y="958" ry="9.4" width="549.5" height="41.2" style="color:black; overflow:visible; fill:white; stroke-width:2.65;"/>
+	<text x="-1534.4" y="952" style="text-align:center; text-anchor:middle; font-size:18px; color:black; overflow:visible; fill:#0065a4; stroke-width:2.65;">&quot;Dependent&quot;</text>
+	<text x="-1711.3" y="950.8" style="text-align:center; text-anchor:middle; font-size:18px; color:black; overflow:visible; fill:#0065a4; stroke-width:2.65;">&quot;Independent&quot;</text>
+	<text x="-1624.3" y="901.7" style="text-align:center; text-anchor:middle; font-size:18px; color:black; overflow:visible; fill:#0065a4; stroke-width:2.65;">&quot;Consistent&quot;</text>
+	<text x="-1900.1" y="901.2" style="text-align:center; text-anchor:middle; font-size:18px; color:black; overflow:visible; fill:#0065a4; stroke-width:2.65;">&quot;Inconsistent&quot;</text>
+	<g transform="matrix(0.5,0,0,0.5,-851.415,330.115)">
+		<path style="color:black; overflow:visible; fill:#0065a4; stroke-width:5.3;" d="m -1732.1,1262.6 c -8.2,8.2 -5.9,20.3 -2.6,30.1 1.4,5.2 0.9,10.7 -1,15.7 -6,-0.2 -7.6,-2.3 -5.4,-7.7 0,-11.2 -7.1,-22.2 -2,-33.4 3,-6.3 5,-13.1 10.9,-4.8 z"/>
+		<path style="color:black; overflow:visible; fill:#0065a4; stroke-width:5.3;" d="m -1747.3,1292 c 7.8,8.5 11.3,20 11,31.4 -11.4,1.6 -3.1,-11 -0.9,-17.3 3.7,-6.5 8.7,-12.4 14.9,-16.6 1.7,5.5 5,6.2 -0.7,9.5 -7.6,6.6 -11.1,16.2 -13.4,25.7 -9.7,6.1 -6.1,-8.2 -8,-13.3 0.8,-7 -12.5,-13.5 -4.7,-17.9 0.5,-0.4 1.5,-1.2 1.8,-1.5 z"/>
+	</g>
+	<g transform="matrix(0.5,0,0,0.5,-655.679,330.187)">
+		<path style="color:black; overflow:visible; fill:#0065a4; stroke-width:5.3;" d="m -1732.1,1262.6 c -8.2,8.2 -5.9,20.3 -2.6,30.1 1.4,5.2 0.9,10.7 -1,15.7 -6,-0.2 -7.6,-2.3 -5.4,-7.7 0,-11.2 -7.1,-22.2 -2,-33.4 3,-6.3 5,-13.1 10.9,-4.8 z"/>
+		<path style="color:black; overflow:visible; fill:#0065a4; stroke-width:5.3;" d="m -1747.3,1292 c 7.8,8.5 11.3,20 11,31.4 -11.4,1.6 -3.1,-11 -0.9,-17.3 3.7,-6.5 8.7,-12.4 14.9,-16.6 1.7,5.5 5,6.2 -0.7,9.5 -7.6,6.6 -11.1,16.2 -13.4,25.7 -9.7,6.1 -6.1,-8.2 -8,-13.3 0.8,-7 -12.5,-13.5 -4.7,-17.9 0.5,-0.4 1.5,-1.2 1.8,-1.5 z"/>
+	</g>
+	<g transform="matrix(0.5,0,0,0.5,-852.748,505.826)">
+		<path style="color:black; overflow:visible; fill:#0065a4; stroke-width:5.3;" d="m -1716.8,854.5 c 8.9,-19 31.3,-27.4 51.3,-24.9 24.9,1.7 53,3.1 73.8,-13.3 5.2,-4 8.7,-9.6 10.9,-15.6 6.1,1.2 7.4,4.3 3.5,9.2 -12.5,20.7 -39.3,27.6 -62,27.5 -21.5,0.7 -47.7,-7.1 -64.5,10.8 -5.8,5 -4.8,11.9 -13,6.3 z"/>
+		<path style="color:black; overflow:visible; fill:#0065a4; stroke-width:5.3;" d="m -1709.2,827.8 c -1.4,9.8 0.1,20 -3.6,29.4 -9.9,-6.9 11.7,-11.4 18.8,-12.3 6.2,-1.9 9.1,-0 7.9,6.5 -10,-0.2 -19.8,2.5 -28,8.4 -10.6,0.6 -1.7,-11.6 -3,-17.6 1,-5.6 -2.8,-18 6.4,-14.5 0.5,-0 1,0.2 1.5,0.2 z"/>
+	</g>
+	<g transform="matrix(-0.5,0,0,0.5,-2397.85,506.769)">
+		<path style="color:black; overflow:visible; fill:#0065a4; stroke-width:5.3;" d="m -1716.8,854.5 c 8.9,-19 31.3,-27.4 51.3,-24.9 24.9,1.7 53,3.1 73.8,-13.3 5.2,-4 8.7,-9.6 10.9,-15.6 6.1,1.2 7.4,4.3 3.5,9.2 -12.5,20.7 -39.3,27.6 -62,27.5 -21.5,0.7 -47.7,-7.1 -64.5,10.8 -5.8,5 -4.8,11.9 -13,6.3 z"/>
+		<path style="color:black; overflow:visible; fill:#0065a4; stroke-width:5.3;" d="m -1709.2,827.8 c -1.4,9.8 0.1,20 -3.6,29.4 -9.9,-6.9 11.7,-11.4 18.8,-12.3 6.2,-1.9 9.1,-0 7.9,6.5 -10,-0.2 -19.8,2.5 -28,8.4 -10.6,0.6 -1.7,-11.6 -3,-17.6 1,-5.6 -2.8,-18 6.4,-14.5 0.5,-0 1,0.2 1.5,0.2 z"/>
+	</g>
+	<g>
+		<path style="color:black; overflow:visible; fill:#0065a4; stroke-width:2.65;" d="m -1897.7,909.7 c -2.1,3 -2.9,6.8 -3.1,10.4 0.1,4.5 2.5,8.5 3.8,12.8 2.5,6.7 7.5,12.5 8.5,19.8 0.8,3.3 0.6,6.7 0.5,10.1 -0.3,5.1 -1.6,10.2 -1.4,15.4 -0.5,0.5 -1.9,10e-4 -2.8,0.1 -1.2,0.3 -0.5,-1.2 -0.7,-1.9 0.1,-4.1 1.1,-8.1 1.3,-12.2 0.4,-2.7 0.4,-5.5 0.4,-8.2 -0.5,-4.5 -2,-8.9 -4.4,-12.8 -2.4,-4.2 -4.4,-8.5 -5.9,-13.1 -1.7,-4.3 -3.4,-9 -2.1,-13.6 0.6,-3 1.4,-6.1 3.3,-8.6 1,0.6 1.9,1.3 2.9,1.9 -0.1,0 -0.3,0 -0.4,0 z"/>
+		<path style="color:black; overflow:visible; fill:#0065a4; stroke-width:2.65;" d="m -1896.7,967.7 c 1.9,4 4.1,7.8 5.7,12 0.6,1.9 0.6,4 0.6,6 -0.4,-1.5 -4.6,0.3 -2.6,-2.4 1.5,-4 3,-8.1 6.3,-11 1.3,-0.7 3.2,-4.2 4.5,-2.5 0.3,0.8 2.5,1.7 1.1,2.3 -3.3,2.4 -6.2,5.5 -7.5,9.5 -0.7,2.6 -2.2,6.5 -5.3,4.5 -0.2,-2.2 0.3,-4.6 -0.9,-6.6 -1.5,-3.3 -3.3,-6.6 -4.9,-9.9 0.9,-0.6 2.1,-1.2 2.9,-1.9 z"/>
+	</g>
+	<rect x="-2608.1" y="2267.7" width="121.1" height="130.6"/>
+	<rect x="-1987.8" y="1102.1" ry="9.4" width="549.5" height="41.2" style="color:black; overflow:visible; fill:white; stroke-width:2.65;"/>
+	<text x="-1735" y="1131.4" style="text-align:center; text-anchor:middle; font-size:24px; color:black; overflow:visible; fill:#0197fd; stroke-width:2.65;">One Solution</text>
+	<text x="-1513.1" y="1131.4" style="text-align:center; text-anchor:middle; font-size:24px; color:black; overflow:visible; fill:#0197fd; stroke-width:2.65;">Solutions</text>
+	<text x="-1586.4" y="1137.8" style="text-align:center; text-anchor:middle; font-size:45px; color:black; overflow:visible; fill:#0197fd; stroke-width:2.65;">∞ </text>
+	<text x="-1918.9" y="1131.4" style="text-align:center; text-anchor:middle; font-size:24px; color:black; overflow:visible; fill:#0197fd; stroke-width:2.65;">No Solution</text>
+</g>
+</svg>
