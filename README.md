@@ -9,11 +9,11 @@
 
 ## Contents
 
-1. 000 ~ 099 : Statistics (이론)
-2. 100 ~ 199 : Linear Algebra (이론)
-3. 200 ~ 299 : Feature Selection & Engineering 
-4. 300 ~ 399 : Statistical Analysis
-5. 400 ~ 499 : Machine Learning Algorithms
+1. 000 ~ 099 : Statistics, Linear Algebra (이론)
+2. 100 ~ 199 : Linear Regression & Basic Machine Learning
+3. 200 ~ 299 : Useful Analysis & Machine Learning 
+4. 300 ~ 399 : Machine Learning Algorithms
+5. 400 ~ 499 : ..
 6. 500 ~ 599 : Deep Learning Basics
 7. 600 ~ 699 : Convolution Neural Networks
 8. 700 ~ 799 : Recurrent Neural Network Algorithms
