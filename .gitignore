@@ -2,7 +2,6 @@
 .idea
 _site
 
-
 # Python
 *.pyc
 .ipynb_checkpoints
@@ -28,6 +27,7 @@ imdb_full.pkl
 _network
 _network_backup
 _tfmodel
+lightning_logs
 
 # R
 .Rhistory
