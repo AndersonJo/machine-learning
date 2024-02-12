@@ -57,14 +57,6 @@ class TransformerModule(pl.LightningModule):
         return memory
 
     @staticmethod
-    def _make_look_ahead_mask(size) -> torch.Tensor:
-        mask = torch.triu(torch.ones(size, size, dtype=torch.float32), diagonal=1)
-        mask = (mask
-                .masked_fill(mask == torch.tensor(1), float('-inf'))
-                .masked_fill(mask == torch.tensor(0), 0))
-        return mask
-
-    @staticmethod
     def _make_padding_mask(seq: torch.Tensor, pad_idx: int) -> torch.Tensor:
         return torch.tensor(seq == pad_idx).to(seq.device)
 
@@ -84,12 +76,18 @@ class TransformerModule(pl.LightningModule):
 
         # Create Padding Mask
         # [batch, max_sequence] -> (64, 128)
+        # dtype: bool
+        #  - masked: True
+        #  - unmasked: False
         src_padding_mask = self._make_padding_mask(src, self.src_pad_idx)
         tgt_padding_mask = self._make_padding_mask(tgt_input, self.tgt_pad_idx)
 
         # Look Ahead Mask (A.K.A No Peak Mask)
         # [max_sequence, max_sequence] -> (128, 128)
-        tgt_mask = self._make_look_ahead_mask(size=src_padding_mask.shape[1]).to(src_padding_mask.device)
+        # dtype: float32
+        #  - masked: -inf
+        #  - unmasked: 0
+        tgt_mask = nn.Transformer.generate_square_subsequent_mask(src.shape[1], device=src.device)
 
         output = self(src, tgt_input,
                       src_padding_mask=src_padding_mask,

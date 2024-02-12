@@ -34,10 +34,9 @@ def train():
     checkpointer = ModelCheckpoint(
         dirpath='./checkpoints',
         filename='machine-translation-{mode}-{epoch:02d}-{step:06d}-{loss:.4f}',
-        monitor='step',
-        every_n_train_steps=2000,
-        save_top_k=10,
-        mode='max'
+        monitor='loss',
+        every_n_epochs=1,
+        mode='min'
     )
     tensorboard = TensorBoardLogger('./tb_logs', name='machine-translation')
 
