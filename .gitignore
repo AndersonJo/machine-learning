@@ -28,6 +28,7 @@ _network
 _network_backup
 _tfmodel
 lightning_logs
+tb_logs
 
 # R
 .Rhistory
