@@ -36,8 +36,10 @@ def train():
         filename='machine-translation-{mode}-{epoch:02d}-{step:06d}-{loss:.4f}',
         monitor='loss',
         every_n_epochs=1,
+        save_top_k=-1,
         mode='min'
     )
+
     tensorboard = TensorBoardLogger('./tb_logs', name='machine-translation')
 
     trainer = Trainer(max_epochs=15,

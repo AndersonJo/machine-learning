@@ -13,6 +13,7 @@ class TransformerModule(pl.LightningModule):
                  dim_feedforward=2048, dropout=0.1, src_pad_idx=0, tgt_pad_idx=0):
         super().__init__()
         self.save_hyperparameters()
+        self.d_model = d_model
 
         # Encoder와 Decoder에 사용될 Embedding Layer 정의
         self.src_embedding = nn.Embedding(src_vocab_size, d_model)
@@ -51,8 +52,10 @@ class TransformerModule(pl.LightningModule):
         """
         Encode output could be used later, depending on the project
         """
-        src_embedded = self.positional_encoding(self.src_embedding(src))
-        memory = self.transformer_encoder(src=src_embedded, mask=src_mask,
+
+        src_embedded = self.src_embedding(src) * math.sqrt(self.d_model)
+        src_pos_encoded = self.positional_encoding(src_embedded)
+        memory = self.transformer_encoder(src=src_pos_encoded, mask=src_mask,
                                           src_key_padding_mask=src_padding_mask)
         return memory
 
