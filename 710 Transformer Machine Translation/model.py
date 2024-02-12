@@ -106,6 +106,7 @@ class TransformerModule(pl.LightningModule):
         # 로깅 (옵션)
         self.log('train_loss', loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)
         self.log('loss', loss.item(), on_step=True, on_epoch=True, prog_bar=True, logger=True)
+        self.log('mode', 0)
         return loss
 
     def validation_step(self, batch, batch_idx) -> STEP_OUTPUT:
@@ -124,6 +125,8 @@ class TransformerModule(pl.LightningModule):
         loss = F.cross_entropy(output.view(-1, output.size(-1)), tgt_output.view(-1), ignore_index=self.tgt_pad_idx)
         self.log('val_loss', loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)
         self.log('loss', loss.item(), on_step=True, on_epoch=True, prog_bar=True, logger=True)
+        self.log('mode', 1)
+
         return loss
 
     def configure_optimizers(self):

@@ -6,6 +6,7 @@ _site
 *.pyc
 .ipynb_checkpoints
 
+
 # Data
 _data
 *.gz
@@ -22,13 +23,13 @@ joblib
 imdb_full.pkl
 
 # TensorFlow Model
-*.model
 *.tfmodel
 _network
 _network_backup
 _tfmodel
 lightning_logs
 tb_logs
+checkpoints
 
 # R
 .Rhistory

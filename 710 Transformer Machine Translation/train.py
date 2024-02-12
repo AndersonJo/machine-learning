@@ -36,6 +36,7 @@ def train():
         filename='machine-translation-{mode}-{epoch:02d}-{step:06d}-{loss:.4f}',
         monitor='step',
         every_n_train_steps=2000,
+        save_top_k=10,
         mode='max'
     )
     tensorboard = TensorBoardLogger('./tb_logs', name='machine-translation')
