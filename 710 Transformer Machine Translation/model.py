@@ -1,19 +1,20 @@
 import math
-from typing import Dict, Any
+from typing import Dict
 
 import lightning as pl
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from lightning.pytorch.utilities.types import STEP_OUTPUT
 
 
 class TransformerModule(pl.LightningModule):
     def __init__(self, src_vocab_size, tgt_vocab_size, d_model=512, nhead=8, num_encoder_layers=6, num_decoder_layers=6,
-                 dim_feedforward=2048, dropout=0.1, src_pad_idx=0, tgt_pad_idx=0):
+                 dim_feedforward=2048, dropout=0.1, src_pad_idx=0, tgt_pad_idx=0, bos_idx=2):
         super().__init__()
         self.save_hyperparameters()
         self.d_model = d_model
+        self.bos_idx = bos_idx
+        self.embedding_scale = math.sqrt(d_model)
 
         # Encoder와 Decoder에 사용될 Embedding Layer 정의
         self.src_embedding = nn.Embedding(src_vocab_size, d_model)
@@ -40,24 +41,27 @@ class TransformerModule(pl.LightningModule):
     def forward(self, src: torch.Tensor, tgt: torch.Tensor,
                 src_mask=None, tgt_mask=None, src_padding_mask=None, tgt_padding_mask=None):
         memory = self.encode(src, src_mask=src_mask, src_padding_mask=src_padding_mask)
-        tgt_embedded = self.positional_encoding(self.tgt_embedding(tgt))
-
-        output = self.transformer_decoder(tgt=tgt_embedded, memory=memory, tgt_mask=tgt_mask,
-                                          tgt_key_padding_mask=tgt_padding_mask)
-
-        output = self.out(output)
+        decoded_output = self.decode(tgt, memory, tgt_mask=tgt_mask, tgt_padding_mask=tgt_padding_mask)
+        output = self.out(decoded_output)
         return output
 
     def encode(self, src: torch.Tensor, src_mask=None, src_padding_mask=None) -> torch.Tensor:
         """
         Encode output could be used later, depending on the project
         """
-
-        src_embedded = self.src_embedding(src) * math.sqrt(self.d_model)
-        src_pos_encoded = self.positional_encoding(src_embedded)
-        memory = self.transformer_encoder(src=src_pos_encoded, mask=src_mask,
+        src_encoded = self.positional_encoding(self.src_embedding(src) * self.embedding_scale)
+        memory = self.transformer_encoder(src=src_encoded, mask=src_mask,
                                           src_key_padding_mask=src_padding_mask)
         return memory
+
+    def decode(self, tgt: torch.Tensor, memory: torch.Tensor,
+               tgt_mask: torch.Tensor = None, tgt_padding_mask: torch.Tensor = None):
+        tgt_embedded = self.positional_encoding(self.tgt_embedding(tgt) * self.embedding_scale)
+
+        output = self.transformer_decoder(tgt=tgt_embedded, memory=memory, tgt_mask=tgt_mask,
+                                          tgt_key_padding_mask=tgt_padding_mask)
+
+        return output
 
     @staticmethod
     def _make_padding_mask(seq: torch.Tensor, pad_idx: int) -> torch.Tensor:
@@ -98,31 +102,52 @@ class TransformerModule(pl.LightningModule):
                       tgt_mask=tgt_mask)
 
         # Cross Entropy Loss
+        # cross_entropy 사용전 softmax 사용하는게 일반적
         # output shape [batch, max_sequence, vocab_size] (64, 128, 8000)
         #           -> [batch * max_sequence, vocab_size] (8192, 8000)
         # tgt_output shape [batch, max_sequence] (64, 128)
         #           -> [batch * max_sequence] (8192)
-        loss = F.cross_entropy(output.view(-1, output.size(-1)), tgt_output.view(-1), ignore_index=self.tgt_pad_idx)
+        # output = F.softmax(output, dim=-1)
+        # loss = F.cross_entropy(output.view(-1, output.size(-1)), tgt_output.view(-1),
+        #                        ignore_index=self.tgt_pad_idx, reduction='sum')
+
+        # Negative Log Likelihood Loss
+        # nll_loss 사용전 log_softmax 를 사용하는게 일반적
+        # 무슨 이유에서인지는 모르겠지만 cross entropy 가 안되는것 같다
+        output = F.log_softmax(output, dim=-1)
+        loss = F.nll_loss(output.view(-1, output.size(-1)), tgt_output.view(-1),
+                          ignore_index=self.tgt_pad_idx, reduction='sum')
 
         # 로깅 (옵션)
         self.log('train_loss', loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)
         self.log('loss', loss.item(), on_step=True, on_epoch=True, prog_bar=True, logger=True)
         self.log('mode', 0)
+        if batch_idx % 100 == 0:
+            eos_idx = torch.where(src[0] == 3)[0].item()
+            print(f'src: {src[0, :eos_idx + 1].tolist()}')
+            print(torch.argmax(output[0], dim=-1))
+
         return loss
 
-    def validation_step(self, batch, batch_idx) -> STEP_OUTPUT:
+    def validation_step(self, batch, batch_idx):
         src, tgt_input, tgt_output = batch['src'], batch['tgt_input'], batch['tgt_output']
         tgt_output = tgt_output.to(torch.long)
+
+        tgt_input = torch.zeros_like(tgt_input, dtype=torch.int32, device=self.device)
+        tgt_input[:, 0] = self.bos_idx
 
         # Create Padding Mask
         # [batch, max_sequence] -> (64, 128)
         src_padding_mask = self._make_padding_mask(src, self.src_pad_idx)
         tgt_padding_mask = self._make_padding_mask(tgt_input, self.tgt_pad_idx)
+        tgt_mask = nn.Transformer.generate_square_subsequent_mask(src.shape[1], device=src.device)
 
         output = self(src, tgt_input,
                       src_padding_mask=src_padding_mask,
-                      tgt_padding_mask=tgt_padding_mask)
+                      tgt_padding_mask=tgt_padding_mask,
+                      tgt_mask=tgt_mask)
 
+        output = F.softmax(output, dim=-1)
         loss = F.cross_entropy(output.view(-1, output.size(-1)), tgt_output.view(-1), ignore_index=self.tgt_pad_idx)
         self.log('val_loss', loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)
         self.log('loss', loss.item(), on_step=True, on_epoch=True, prog_bar=True, logger=True)
@@ -146,7 +171,7 @@ class PositionalEncoding(nn.Module):
         pe[:, 0::2] = torch.sin(position * div_term)
         pe[:, 1::2] = torch.cos(position * div_term)
 
-        pe = pe.unsqueeze(0).transpose(0, 1)
+        pe = pe.unsqueeze(0)
         # pe를 모듈의 버퍼로 등록하여 학습 중에 값이 업데이트되지 않도록 함
         self.register_buffer('pe', pe)
 
@@ -156,5 +181,5 @@ class PositionalEncoding(nn.Module):
             x: Tensor, shape [seq_len, batch_size, embedding_dim]
         """
         # 입력 텐서에 위치 인코딩 값을 추가
-        x = x + self.pe[:x.size(0), :]
+        x = x + self.pe[:, :x.size(1), :].detach()
         return self.dropout(x)
