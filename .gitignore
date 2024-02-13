@@ -18,6 +18,7 @@ _data
 cifar-10-batches-py
 *.h5
 joblib
+*.ckpt
 
 # Specific Data
 imdb_full.pkl

@@ -67,17 +67,7 @@ class TransformerModule(pl.LightningModule):
     def _make_padding_mask(seq: torch.Tensor, pad_idx: int) -> torch.Tensor:
         return torch.tensor(seq == pad_idx).to(seq.device)
 
-    def training_step(self, batch: Dict[str, torch.Tensor], batch_idx: int):
-        """
-        Original Transformer should be (max_sequence, batch, features).
-        But when nn.TransformerEncoderLayer(..., batch_first=True), we can use it like (batch, max_sequence, features)
-
-        batch
-            - src: (batch, max_sequence)
-            - tgt_input: (batch, max_sequence) but <eos> is missing at the end of sequence.
-            - tgt_output: (batch, max_sequence) but <bos> is missing at the beginning of sequence.
-        """
-        # batch에서 소스 데이터, 타겟 데이터 분리
+    def do_loss_step(self, batch: Dict[str, torch.Tensor], batch_idx: int):
         src, tgt_input, tgt_output = batch['src'], batch['tgt_input'], batch['tgt_output']
         tgt_output = tgt_output.to(torch.long)
 
@@ -118,37 +108,36 @@ class TransformerModule(pl.LightningModule):
         loss = F.nll_loss(output.view(-1, output.size(-1)), tgt_output.view(-1),
                           ignore_index=self.tgt_pad_idx, reduction='sum')
 
+        return loss, output
+
+    def training_step(self, batch: Dict[str, torch.Tensor], batch_idx: int):
+        """
+        Original Transformer should be (max_sequence, batch, features).
+        But when nn.TransformerEncoderLayer(..., batch_first=True), we can use it like (batch, max_sequence, features)
+
+        batch
+            - src: (batch, max_sequence)
+            - tgt_input: (batch, max_sequence) but <eos> is missing at the end of sequence.
+            - tgt_output: (batch, max_sequence) but <bos> is missing at the beginning of sequence.
+        """
+        # batch에서 소스 데이터, 타겟 데이터 분리
+        src, tgt_input, tgt_output = batch['src'], batch['tgt_input'], batch['tgt_output']
+
+        loss, output = self.do_loss_step(batch, batch_idx)
+
         # 로깅 (옵션)
         self.log('train_loss', loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)
         self.log('loss', loss.item(), on_step=True, on_epoch=True, prog_bar=True, logger=True)
         self.log('mode', 0)
-        if batch_idx % 100 == 0:
-            eos_idx = torch.where(src[0] == 3)[0].item()
-            print(f'src: {src[0, :eos_idx + 1].tolist()}')
-            print(torch.argmax(output[0], dim=-1))
 
+        if batch_idx % 100 == 0:
+            idx = torch.argmax((tgt_output[0] == 3).to(torch.int)).item() + 1
+            print('Answer:', tgt_output[0][:10 + 1].tolist())
+            print('Pred  :', torch.argmax(output[0][:idx], dim=-1).tolist())
         return loss
 
     def validation_step(self, batch, batch_idx):
-        src, tgt_input, tgt_output = batch['src'], batch['tgt_input'], batch['tgt_output']
-        tgt_output = tgt_output.to(torch.long)
-
-        tgt_input = torch.zeros_like(tgt_input, dtype=torch.int32, device=self.device)
-        tgt_input[:, 0] = self.bos_idx
-
-        # Create Padding Mask
-        # [batch, max_sequence] -> (64, 128)
-        src_padding_mask = self._make_padding_mask(src, self.src_pad_idx)
-        tgt_padding_mask = self._make_padding_mask(tgt_input, self.tgt_pad_idx)
-        tgt_mask = nn.Transformer.generate_square_subsequent_mask(src.shape[1], device=src.device)
-
-        output = self(src, tgt_input,
-                      src_padding_mask=src_padding_mask,
-                      tgt_padding_mask=tgt_padding_mask,
-                      tgt_mask=tgt_mask)
-
-        output = F.softmax(output, dim=-1)
-        loss = F.cross_entropy(output.view(-1, output.size(-1)), tgt_output.view(-1), ignore_index=self.tgt_pad_idx)
+        loss, output = self.do_loss_step(batch, batch_idx)
         self.log('val_loss', loss, on_step=True, on_epoch=True, prog_bar=True, logger=True)
         self.log('loss', loss.item(), on_step=True, on_epoch=True, prog_bar=True, logger=True)
         self.log('mode', 1)

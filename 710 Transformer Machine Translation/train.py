@@ -50,7 +50,6 @@ def train():
                       enable_progress_bar=True,
                       enable_model_summary=True,
                       logger=tensorboard,  # TensorBoard 는 callback 에 넣는 것 아닙니다.
-
                       callbacks=[checkpointer])
     trainer.fit(model, train_loader, valid_loader)
     # trainer.validate(model, valid_loader)
