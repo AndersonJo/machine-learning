@@ -99,14 +99,14 @@ class TransformerModule(pl.LightningModule):
         #           -> [batch * max_sequence] (8192)
         # output = F.softmax(output, dim=-1)
         # loss = F.cross_entropy(output.view(-1, output.size(-1)), tgt_output.view(-1),
-        #                        ignore_index=self.tgt_pad_idx, reduction='sum')
+        #                        ignore_index=self.tgt_pad_idx, reduction='mean')
 
         # Negative Log Likelihood Loss
         # nll_loss 사용전 log_softmax 를 사용하는게 일반적
         # 무슨 이유에서인지는 모르겠지만 cross entropy 가 안되는것 같다
         output = F.log_softmax(output, dim=-1)
         loss = F.nll_loss(output.view(-1, output.size(-1)), tgt_output.view(-1),
-                          ignore_index=self.tgt_pad_idx, reduction='sum')
+                          ignore_index=self.tgt_pad_idx, reduction='mean')
 
         return loss, output
 
@@ -131,9 +131,11 @@ class TransformerModule(pl.LightningModule):
         self.log('mode', 0)
 
         if batch_idx % 100 == 0:
-            idx = torch.argmax((tgt_output[0] == 3).to(torch.int)).item() + 1
-            print('Answer:', tgt_output[0][:10 + 1].tolist())
+            idx = min(torch.argmax((tgt_output[0] == 3).to(torch.int)).item() + 1, 15)
+            print('loss  :', loss.item())
+            print('Answer:', tgt_output[0][:idx].tolist())
             print('Pred  :', torch.argmax(output[0][:idx], dim=-1).tolist())
+            print()
         return loss
 
     def validation_step(self, batch, batch_idx):
