@@ -5,15 +5,17 @@ import lightning as pl
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch.optim.lr_scheduler import CyclicLR
 
 
 class TransformerModule(pl.LightningModule):
     def __init__(self, src_vocab_size, tgt_vocab_size, d_model=512, nhead=8, num_encoder_layers=6, num_decoder_layers=6,
-                 dim_feedforward=2048, dropout=0.1, src_pad_idx=0, tgt_pad_idx=0, bos_idx=2):
+                 dim_feedforward=2048, dropout=0.1, lr=0.0001, src_pad_idx=0, tgt_pad_idx=0, bos_idx=2):
         super().__init__()
         self.save_hyperparameters()
         self.d_model = d_model
         self.bos_idx = bos_idx
+        self.lr = lr
         self.embedding_scale = math.sqrt(d_model)
 
         # Encoder와 Decoder에 사용될 Embedding Layer 정의
@@ -122,7 +124,6 @@ class TransformerModule(pl.LightningModule):
         """
         # batch에서 소스 데이터, 타겟 데이터 분리
         src, tgt_input, tgt_output = batch['src'], batch['tgt_input'], batch['tgt_output']
-
         loss, output = self.do_loss_step(batch, batch_idx)
 
         # 로깅 (옵션)
@@ -131,8 +132,9 @@ class TransformerModule(pl.LightningModule):
         self.log('mode', 0)
 
         if batch_idx % 100 == 0:
+            lr = self.trainer.optimizers[0].param_groups[0]['lr']
             idx = min(torch.argmax((tgt_output[0] == 3).to(torch.int)).item() + 1, 15)
-            print('loss  :', loss.item())
+            print(f'loss  : {loss.item()} | lr: {lr:.8f}')
             print('Answer:', tgt_output[0][:idx].tolist())
             print('Pred  :', torch.argmax(output[0][:idx], dim=-1).tolist())
             print()
@@ -147,7 +149,10 @@ class TransformerModule(pl.LightningModule):
         return loss
 
     def configure_optimizers(self):
-        return torch.optim.Adam(self.parameters(), lr=0.0005)
+        optimizer = torch.optim.Adam(self.parameters(), lr=self.lr)
+        scheduler = CyclicLR(optimizer, base_lr=0.00001, max_lr=0.0002, gamma=0.99995,
+                             mode='exp_range', cycle_momentum=False)
+        return [optimizer], [scheduler]
 
 
 class PositionalEncoding(nn.Module):

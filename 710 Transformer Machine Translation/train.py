@@ -42,7 +42,7 @@ def train():
 
     tensorboard = TensorBoardLogger('./tb_logs', name='machine-translation')
 
-    trainer = Trainer(max_epochs=15,
+    trainer = Trainer(max_epochs=100,
                       accelerator='cuda',  # it's not GPU
                       devices=1,
                       log_every_n_steps=100,
