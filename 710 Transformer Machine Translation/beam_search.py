@@ -3,7 +3,7 @@ from sentencepiece import SentencePieceProcessor
 from torch import nn
 
 from model import TransformerModule
-from typing import Optional
+from typing import Optional, List
 
 
 class BeamSearch:
@@ -101,5 +101,6 @@ if __name__ == '__main__':
     model.eval()
 
     search = BeamSearch(model, sp, device='cpu')
-    output, probs = search.greedy_search_from_text(["제가 이번 여름 휴가 보낸 이야기를 할게요."])
+    output, probs = search.greedy_search_from_text(["제가 이번 여름 휴가 보낸 이야기를 할게요.", "너가 나한테 돈 빌린것 지금 갚아"])
+
     print(search.convert_output_to_text(output))
