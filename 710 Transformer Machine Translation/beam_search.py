@@ -15,51 +15,70 @@ class BeamSearch:
         self.max_seq_len = max_seq_len
         self.device = device if device else torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    def greedy_search(self, text: str):
+    def greedy_search_from_text(self, text):
         self.model.eval()
         self.model.to(self.device)
 
         src_tensor = self.create_source_tensor(text)
         src_padding_mask = self.get_padding_mask(src_tensor, pad_idx=self.sp.pad_id())
+        return self.greedy_search(src_tensor, src_padding_mask)
 
+    def greedy_search(self, src_tensor: torch.Tensor, src_padding_mask: torch.Tensor):
+        batch_size = src_tensor.shape[0]
         # Get initial encoder output
         # if we wrap it with `torch.no_grad()` it doesn't work for some reason.
-        memory = self.model.encode(src_tensor, src_padding_mask=src_padding_mask)
-        memory = memory.to(self.device)
+        with torch.enable_grad():
+            memory = self.model.encode(src_tensor, src_padding_mask=src_padding_mask)
+            memory = memory.to(self.device)
+            mask = torch.zeros(batch_size).type(torch.bool).to(self.device)
 
         with torch.no_grad():
             # Create decoder input.
             # it starts with <bos> token.
-            y_pred = torch.ones(1, 1).fill_(self.sp.bos_id()).type(torch.long).to(self.device)
+            y_pred = (
+                torch.ones(batch_size, 1)
+                .fill_(self.sp.bos_id())
+                .type(torch.long)
+                .to(self.device)
+            )
 
             for i in range(self.max_seq_len - 1):
                 tgt_mask = (nn.Transformer.generate_square_subsequent_mask(y_pred.size(1))
-                            .type(torch.bool)).to(self.device)
-
+                            .type(torch.bool).to(self.device))
                 out = self.model.decode(y_pred, memory, tgt_mask)
-                out = out.transpose(0, 1)
                 prob = self.model.out(out[:, -1])
                 _, next_words = torch.max(prob, dim=1)
-                next_word = next_words[-1].item()
 
-                y_pred = torch.cat([y_pred, torch.ones(1, 1).type_as(src_tensor.data).fill_(next_word)], dim=1)
-                if next_word == self.sp.eos_id():
+                y_pred = torch.cat(
+                    [y_pred,
+                     next_words.masked_fill(mask, self.sp.pad_id()).type_as(src_tensor.data).unsqueeze(1)], dim=1).to(
+                    self.device)
+
+                mask |= next_words == self.sp.eos_id()
+                if mask.all().item():
                     break
-        return y_pred
+
+        return y_pred, prob
 
     def convert_output_to_text(self, y_pred: torch.Tensor):
-        return self.sp.Decode(y_pred[0].tolist())
+        batch_size = y_pred.shape[0]
+        output = [None] * batch_size
+        for i in range(batch_size):
+            output[i] = self.sp.Decode(y_pred[i].tolist())
+        return output
 
-    def create_source_tensor(self, text: str) -> torch.Tensor:
+    def create_source_tensor(self, texts: List[str]) -> torch.Tensor:
         # Create src input
-        src_tokenized = self.sp.Encode(text, add_bos=True, add_eos=True)
-        src_tokenized = src_tokenized[:self.max_seq_len]
-        if src_tokenized[-1] != self.sp.eos_id():
-            src_tokenized[-1] = self.sp.eos_id()
+        batch_size = len(texts)
+        src_tensor = torch.zeros(batch_size, self.max_seq_len, dtype=torch.int32).to(self.model.device)
 
-        src_tensor = torch.zeros(self.max_seq_len, dtype=torch.int32).to(self.model.device)
-        src_tensor[: len(src_tokenized)] = torch.tensor(src_tokenized)
-        src_tensor = src_tensor.unsqueeze(0)
+        for i, text in enumerate(texts):
+            src_tokenized = self.sp.Encode(text, add_bos=True, add_eos=True)
+            src_tokenized = src_tokenized[:self.max_seq_len]
+            if src_tokenized[-1] != self.sp.eos_id():
+                src_tokenized[-1] = self.sp.eos_id()
+
+            src_tensor[i, :len(src_tokenized)] = torch.Tensor(src_tokenized)
         src_tensor = src_tensor.to(self.device)
         return src_tensor
 
