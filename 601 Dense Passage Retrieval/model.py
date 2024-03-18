@@ -32,6 +32,8 @@ class KoBertBiEncoder(pl.LightningModule):
         self.log('train_batch_acc', batch_acc, on_step=True, on_epoch=True, prog_bar=True, logger=True)
         return loss
 
+
+
     def validation_step(self, batch, batch_idx) -> STEP_OUTPUT:
         similarities = self.do_similarity_step(batch)
 

@@ -28,12 +28,13 @@ def train():
     pad_id = train_dataset.pad_id
 
     train_loader = DataLoader(train_dataset,
-                              batch_sampler=InBatchNegativeSampler(train_dataset, batch_size=32, drop_last=False),
-                              collate_fn=KorquadCollator(pad_id=pad_id, max_seq_len=512))
-    valid_loader = DataLoader(valid_dataset,
-                              batch_sampler=InBatchNegativeSampler(valid_dataset, batch_size=32, drop_last=False),
+                              # batch_sampler=InBatchNegativeSampler(train_dataset, batch_size=32, drop_last=False),
                               collate_fn=KorquadCollator(pad_id=pad_id, max_seq_len=512),
-                              num_workers=1)
+                              num_workers=4)
+    valid_loader = DataLoader(valid_dataset,
+                              # batch_sampler=InBatchNegativeSampler(valid_dataset, batch_size=32, drop_last=False),
+                              collate_fn=KorquadCollator(pad_id=pad_id, max_seq_len=512),
+                              num_workers=4)
 
     checkpointer = ModelCheckpoint(
         dirpath='./checkpoints',
@@ -44,8 +45,10 @@ def train():
         mode='min'
     )
 
+    # Resume 할때 필요
+    checkpoint_path = './checkpoints/dense-passage-retrieval-epoch=13-step=021154-valid_loss=3.4649.ckpt'
     tensorboard = TensorBoardLogger('./tb_logs', name='machine-translation')
-    trainer = Trainer(max_epochs=100,
+    trainer = Trainer(max_epochs=20,
                       accelerator='cuda',
                       devices=1,
                       enable_checkpointing=True,
@@ -53,11 +56,10 @@ def train():
                       enable_model_summary=True,
                       # hard negative sampling - LightningDataModule 의 train_dataloader 함수에서 Subset 사용해서 추가
                       reload_dataloaders_every_n_epochs=True,
-
                       logger=tensorboard,
                       callbacks=[checkpointer],
                       )
-    trainer.fit(model, train_loader, valid_loader)
+    trainer.fit(model, train_loader, valid_loader, ckpt_path=checkpoint_path)
     # trainer.validate(model, valid_loader)
 
 
