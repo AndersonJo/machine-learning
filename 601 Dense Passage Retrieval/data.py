@@ -28,7 +28,7 @@ class KorQuadDataset(Dataset):
         return len(self.data)
 
     def __getitem__(self, idx) -> tuple:
-        encoded_question, encoded_context, article_id, answer, title = self.data[idx]
+        encoded_question, encoded_context, article_id, context, answer, title = self.data[idx]
 
         return encoded_question, encoded_context, article_id
 

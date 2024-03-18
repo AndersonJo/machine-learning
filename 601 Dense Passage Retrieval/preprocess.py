@@ -17,21 +17,18 @@ def preprocess_raw_data():
     train_data_path = data_dir_path / 'train_data.json'
     valid_data_path = data_dir_path / 'valid_data.json'
     test_data_path = data_dir_path / 'test_data.json'
-
+    #
     if train_data_path.exists() and valid_data_path.exists() and test_data_path.exists():
         return {'train': train_data_path, 'valid': valid_data_path, 'test': test_data_path}
 
     train_data, test_data = _download_data(data_dir_path)
-    train_data, valid_data = train_test_split(train_data, test_size=0.2, random_state=42)
 
     # Convert to Embedding Text
     tokenizer = AutoTokenizer.from_pretrained('skt/kobert-base-v1')
     train_data = _convert_to_encoded_data(tokenizer, train_data)
-    valid_data = _convert_to_encoded_data(tokenizer, valid_data)
     test_data = _convert_to_encoded_data(tokenizer, test_data)
 
     _save_to_json(train_data_path, train_data)
-    _save_to_json(valid_data_path, valid_data)
     _save_to_json(test_data_path, test_data)
 
     return {'train': train_data_path,
@@ -58,9 +55,14 @@ def _convert_to_encoded_data(tokenizer, raw_data) -> list:
         question = article['question']
 
         for answer, answer_start in zip(article['answers']['text'], article['answers']['answer_start']):
+            clue_start = max(0, answer_start - 5)
+            clue_end = min(len(context), answer_start + len(answer) + 5)
+            answer_clue = context[clue_start:clue_end]
+
             tokenized_data.append((question,
-                                   context,
+                                   answer_clue,
                                    article_id,
+                                   context,
                                    answer,
                                    title))
     np.random.shuffle(tokenized_data)
