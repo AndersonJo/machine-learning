@@ -62,8 +62,9 @@ class InBatchNegativeSampler(BatchSampler):
         for idx in self.sampler:
             item = self.sampler.data_source[idx]
             article_id = item[self.ARTICLE_ID_IDX]
+
             if article_id in duplicates:
-                logging.debug(f'duplicated article_id: {article_id}')
+                logging.info(f'duplicated article_id: {article_id}')
                 continue
 
             sampled_ids.append(idx)

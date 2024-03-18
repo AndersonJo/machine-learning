@@ -17,7 +17,7 @@ def preprocess_raw_data():
     train_data_path = data_dir_path / 'train_data.json'
     valid_data_path = data_dir_path / 'valid_data.json'
     test_data_path = data_dir_path / 'test_data.json'
-    #
+
     if train_data_path.exists() and valid_data_path.exists() and test_data_path.exists():
         return {'train': train_data_path, 'valid': valid_data_path, 'test': test_data_path}
 
@@ -50,6 +50,7 @@ def _convert_to_encoded_data(tokenizer, raw_data) -> list:
     tokenized_data = []
     for article in tqdm(raw_data):
         article_id = article['id']
+
         title = article['title']
         context = article['context']  # this is a paragraph
         question = article['question']
@@ -58,10 +59,11 @@ def _convert_to_encoded_data(tokenizer, raw_data) -> list:
             clue_start = max(0, answer_start - 5)
             clue_end = min(len(context), answer_start + len(answer) + 5)
             answer_clue = context[clue_start:clue_end]
+            article_id_int = int(article_id.split('-')[0])
 
-            tokenized_data.append((question,
-                                   answer_clue,
-                                   article_id,
+            tokenized_data.append((question,  # question,
+                                   answer_clue,  # answer_clue,
+                                   article_id_int,
                                    context,
                                    answer,
                                    title))

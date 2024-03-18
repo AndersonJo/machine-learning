@@ -11,7 +11,7 @@ import torch.nn.functional as F
 
 class KoBertBiEncoder(pl.LightningModule):
 
-    def __init__(self, lr=0.001, betas: Tuple[float, float] = (0.9, 0.999)) -> None:
+    def __init__(self, lr=0.00001, betas: Tuple[float, float] = (0.9, 0.999)) -> None:
         super().__init__()
         self.save_hyperparameters()
         self.lr = lr
