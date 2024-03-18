@@ -29,6 +29,7 @@ class KorQuadDataset(Dataset):
 
     def __getitem__(self, idx) -> tuple:
         encoded_question, encoded_context, article_id, answer, title = self.data[idx]
+
         return encoded_question, encoded_context, article_id
 
 
@@ -77,22 +78,26 @@ class InBatchNegativeSampler(BatchSampler):
 
 
 class KorquadCollator:
-    def __init__(self, pad_id: int):
+    def __init__(self, pad_id: int, max_seq_len: int) -> None:
         self.pad_id = pad_id
+        self.max_seq_len = max_seq_len
+        self.tokenizer = AutoTokenizer.from_pretrained('skt/kobert-base-v1')
 
     def __call__(self, batch: List[tuple]):
         """
          - batch_q: batch of encoded questions
          - batch_p: batch of paragraphs (context)
         """
+        encoded_q = [self.tokenizer.encode(i[0]) for i in batch]
+        encoded_p = [self.tokenizer.encode(i[1]) for i in batch]
 
-        batch_q = pad_sequence([torch.Tensor(i[0]) for i in batch],
+        batch_q = pad_sequence([torch.LongTensor(q[:min(self.max_seq_len, len(q))]) for q in encoded_q],
                                batch_first=True,
                                padding_value=self.pad_id)
         batch_q_attn_mask = torch.Tensor(batch_q != self.pad_id).long()
-        batch_p = pad_sequence([torch.Tensor(i[1]) for i in batch],
+        batch_p = pad_sequence([torch.LongTensor(p[:min(self.max_seq_len, len(p))]) for p in encoded_p],
                                batch_first=True,
                                padding_value=self.pad_id)
         batch_p_attn_mask = torch.Tensor(batch_p != self.pad_id).long()
 
-        return batch_q, batch_p_attn_mask, batch_p, batch_p_attn_mask
+        return batch_q, batch_q_attn_mask, batch_p, batch_p_attn_mask

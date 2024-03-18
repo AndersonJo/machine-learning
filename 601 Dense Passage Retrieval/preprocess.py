@@ -21,7 +21,7 @@ def preprocess_raw_data():
     if train_data_path.exists() and valid_data_path.exists() and test_data_path.exists():
         return {'train': train_data_path, 'valid': valid_data_path, 'test': test_data_path}
 
-    train_data, test_data = _download_data()
+    train_data, test_data = _download_data(data_dir_path)
     train_data, valid_data = train_test_split(train_data, test_size=0.2, random_state=42)
 
     # Convert to Embedding Text
@@ -30,23 +30,16 @@ def preprocess_raw_data():
     valid_data = _convert_to_encoded_data(tokenizer, valid_data)
     test_data = _convert_to_encoded_data(tokenizer, test_data)
 
-    with open(train_data_path, 'wt', encoding='utf-8') as f:
-        json.dump(train_data, f)
-
-    with open(valid_data_path, 'wt', encoding='utf-8') as f:
-        json.dump(valid_data, f)
-
-    with open(test_data_path, 'wt', encoding='utf-8') as f:
-        json.dump(test_data, f)
+    _save_to_json(train_data_path, train_data)
+    _save_to_json(valid_data_path, valid_data)
+    _save_to_json(test_data_path, test_data)
 
     return {'train': train_data_path,
             'valid': valid_data_path,
             'test': test_data_path}
 
 
-def _download_data() -> Tuple[list, list]:
-    data_dir_path = Path(gettempdir()) / 'korquad_data'
-
+def _download_data(data_dir_path: Path) -> Tuple[list, list]:
     if not data_dir_path.exists():
         os.makedirs(data_dir_path)
     dataset = load_dataset('squad_kor_v1', data_dir=str(data_dir_path))
@@ -65,10 +58,15 @@ def _convert_to_encoded_data(tokenizer, raw_data) -> list:
         question = article['question']
 
         for answer, answer_start in zip(article['answers']['text'], article['answers']['answer_start']):
-            tokenized_data.append((tokenizer.encode(question),
-                                   tokenizer.encode(context),
+            tokenized_data.append((question,
+                                   context,
                                    article_id,
                                    answer,
                                    title))
     np.random.shuffle(tokenized_data)
     return tokenized_data
+
+
+def _save_to_json(file_path: Path, data: list):
+    with open(file_path, 'wt', encoding='utf-8') as f:
+        json.dump(data, f)
